@@ -30,7 +30,7 @@ from uuid import (
 ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('79c1aa37-dae3-42ae-b333-d1c105477715'),
     name='zendesk-support',
-    version='0.1.14',
+    version='0.1.15',
     base_url='https://{subdomain}.zendesk.com/api/v2',
     auth=AuthConfig(
         options=[
@@ -59,6 +59,7 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     auth_mapping={'access_token': '${access_token}', 'refresh_token': '${refresh_token}'},
                     replication_auth_key_mapping={'credentials.access_token': 'access_token'},
+                    replication_auth_key_constants={'credentials.credentials': 'oauth2.0'},
                 ),
             ),
             AuthOption(
@@ -82,6 +83,7 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     auth_mapping={'username': '${email}/token', 'password': '${api_token}'},
                     replication_auth_key_mapping={'credentials.email': 'email', 'credentials.api_token': 'api_token'},
+                    replication_auth_key_constants={'credentials.credentials': 'api_token'},
                 ),
                 untested=True,
             ),
