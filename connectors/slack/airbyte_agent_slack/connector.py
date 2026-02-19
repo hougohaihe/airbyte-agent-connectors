@@ -185,6 +185,7 @@ class SlackConnector:
             connector = SlackConnector(
                 auth_config=AirbyteAuthConfig(
                     external_user_id="user-123",
+                    organization_id="00000000-0000-0000-0000-000000000123",
                     airbyte_client_id="client_abc123",
                     airbyte_client_secret="secret_xyz789"
                 )
@@ -215,6 +216,7 @@ class SlackConnector:
                 airbyte_client_secret=auth_config.airbyte_client_secret,
                 connector_id=auth_config.connector_id,
                 external_user_id=auth_config.external_user_id,
+                organization_id=auth_config.organization_id,
                 connector_definition_id=str(SlackConnectorModel.id),
             )
         else:
@@ -622,6 +624,7 @@ class SlackConnector:
 
         Args:
             airbyte_config: Airbyte hosted auth config with client credentials and external_user_id.
+                Optionally include organization_id for multi-org request routing.
             redirect_url: URL where users will be redirected after OAuth consent.
                 After consent, user arrives at: redirect_url?connector_id=...
             name: Optional name for the source. Defaults to connector name + external_user_id.
@@ -636,6 +639,7 @@ class SlackConnector:
             consent_url = await SlackConnector.get_consent_url(
                 airbyte_config=AirbyteAuthConfig(
                     external_user_id="my-workspace",
+                    organization_id="00000000-0000-0000-0000-000000000123",
                     airbyte_client_id="client_abc",
                     airbyte_client_secret="secret_xyz",
                 ),
@@ -654,6 +658,7 @@ class SlackConnector:
         client = AirbyteCloudClient(
             client_id=airbyte_config.airbyte_client_id,
             client_secret=airbyte_config.airbyte_client_secret,
+            organization_id=airbyte_config.organization_id,
         )
 
         try:
@@ -696,6 +701,7 @@ class SlackConnector:
 
         Args:
             airbyte_config: Airbyte hosted auth config with client credentials and external_user_id.
+                Optionally include organization_id for multi-org request routing.
             auth_config: Typed auth config. Required unless using server_side_oauth_secret_id.
             server_side_oauth_secret_id: OAuth secret ID from get_consent_url redirect.
                 When provided, auth_config is not required.
@@ -716,6 +722,7 @@ class SlackConnector:
             connector = await SlackConnector.create(
                 airbyte_config=AirbyteAuthConfig(
                     external_user_id="my-workspace",
+                    organization_id="00000000-0000-0000-0000-000000000123",
                     airbyte_client_id="client_abc",
                     airbyte_client_secret="secret_xyz",
                 ),
@@ -726,6 +733,7 @@ class SlackConnector:
             connector = await SlackConnector.create(
                 airbyte_config=AirbyteAuthConfig(
                     external_user_id="my-workspace",
+                    organization_id="00000000-0000-0000-0000-000000000123",
                     airbyte_client_id="client_abc",
                     airbyte_client_secret="secret_xyz",
                 ),
@@ -737,6 +745,7 @@ class SlackConnector:
             connector = await SlackConnector.create(
                 airbyte_config=AirbyteAuthConfig(
                     external_user_id="my-workspace",
+                    organization_id="00000000-0000-0000-0000-000000000123",
                     airbyte_client_id="client_abc",
                     airbyte_client_secret="secret_xyz",
                 ),
@@ -766,6 +775,7 @@ class SlackConnector:
         client = AirbyteCloudClient(
             client_id=airbyte_config.airbyte_client_id,
             client_secret=airbyte_config.airbyte_client_secret,
+            organization_id=airbyte_config.organization_id,
         )
 
         try:
@@ -792,6 +802,7 @@ class SlackConnector:
             auth_config=_AirbyteAuthConfig(
                 airbyte_client_id=airbyte_config.airbyte_client_id,
                 airbyte_client_secret=airbyte_config.airbyte_client_secret,
+                organization_id=airbyte_config.organization_id,
                 connector_id=source_id,
             ),
         )
