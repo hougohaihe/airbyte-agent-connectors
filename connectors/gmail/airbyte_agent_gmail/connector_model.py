@@ -64,11 +64,10 @@ GmailConnectorModel: ConnectorModel = ConnectorModel(
                 'client_secret': '${client_secret}',
             },
             replication_auth_key_mapping={
-                'credentials.client_id': 'client_id',
-                'credentials.client_secret': 'client_secret',
-                'credentials.refresh_token': 'refresh_token',
+                'client_id': 'client_id',
+                'client_secret': 'client_secret',
+                'client_refresh_token': 'refresh_token',
             },
-            replication_auth_key_constants={'credentials.auth_type': 'Client'},
         ),
     ),
     entities=[
