@@ -3831,4 +3831,5 @@ JiraConnectorModel: ConnectorModel = ConnectorModel(
             'visibility',
         ],
     },
+    server_variable_defaults={'subdomain': '{subdomain}'},
 )
