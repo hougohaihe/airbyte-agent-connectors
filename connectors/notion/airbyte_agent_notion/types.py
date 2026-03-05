@@ -113,7 +113,7 @@ class PagesSearchFilter(TypedDict, total=False):
     """User ID or name of the last editor of the page."""
     last_edited_time: str | None
     """Date and time when the page was last edited."""
-    object: dict[str, Any] | None
+    object_: dict[str, Any] | None
     """Type or category of the page object."""
     parent: dict[str, Any] | None
     """ID or reference to the parent page."""
@@ -145,7 +145,7 @@ class PagesInFilter(TypedDict, total=False):
     """User ID or name of the last editor of the page."""
     last_edited_time: list[str]
     """Date and time when the page was last edited."""
-    object: list[dict[str, Any]]
+    object_: list[dict[str, Any]]
     """Type or category of the page object."""
     parent: list[dict[str, Any]]
     """ID or reference to the parent page."""
@@ -177,7 +177,7 @@ class PagesAnyValueFilter(TypedDict, total=False):
     """User ID or name of the last editor of the page."""
     last_edited_time: Any
     """Date and time when the page was last edited."""
-    object: Any
+    object_: Any
     """Type or category of the page object."""
     parent: Any
     """ID or reference to the parent page."""
@@ -209,7 +209,7 @@ class PagesStringFilter(TypedDict, total=False):
     """User ID or name of the last editor of the page."""
     last_edited_time: str
     """Date and time when the page was last edited."""
-    object: str
+    object_: str
     """Type or category of the page object."""
     parent: str
     """ID or reference to the parent page."""
@@ -241,7 +241,7 @@ class PagesSortFilter(TypedDict, total=False):
     """User ID or name of the last editor of the page."""
     last_edited_time: AirbyteSortOrder
     """Date and time when the page was last edited."""
-    object: AirbyteSortOrder
+    object_: AirbyteSortOrder
     """Type or category of the page object."""
     parent: AirbyteSortOrder
     """ID or reference to the parent page."""
@@ -358,11 +358,11 @@ class UsersSearchFilter(TypedDict, total=False):
     """Unique identifier for the user"""
     name: str | None
     """User's display name"""
-    object: dict[str, Any] | None
+    object_: dict[str, Any] | None
     """Always user"""
     person: dict[str, Any] | None
     """Person-specific data"""
-    type: dict[str, Any] | None
+    type_: dict[str, Any] | None
     """Type of user (person or bot)"""
 
 
@@ -376,11 +376,11 @@ class UsersInFilter(TypedDict, total=False):
     """Unique identifier for the user"""
     name: list[str]
     """User's display name"""
-    object: list[dict[str, Any]]
+    object_: list[dict[str, Any]]
     """Always user"""
     person: list[dict[str, Any]]
     """Person-specific data"""
-    type: list[dict[str, Any]]
+    type_: list[dict[str, Any]]
     """Type of user (person or bot)"""
 
 
@@ -394,11 +394,11 @@ class UsersAnyValueFilter(TypedDict, total=False):
     """Unique identifier for the user"""
     name: Any
     """User's display name"""
-    object: Any
+    object_: Any
     """Always user"""
     person: Any
     """Person-specific data"""
-    type: Any
+    type_: Any
     """Type of user (person or bot)"""
 
 
@@ -412,11 +412,11 @@ class UsersStringFilter(TypedDict, total=False):
     """Unique identifier for the user"""
     name: str
     """User's display name"""
-    object: str
+    object_: str
     """Always user"""
     person: str
     """Person-specific data"""
-    type: str
+    type_: str
     """Type of user (person or bot)"""
 
 
@@ -430,11 +430,11 @@ class UsersSortFilter(TypedDict, total=False):
     """Unique identifier for the user"""
     name: AirbyteSortOrder
     """User's display name"""
-    object: AirbyteSortOrder
+    object_: AirbyteSortOrder
     """Always user"""
     person: AirbyteSortOrder
     """Person-specific data"""
-    type: AirbyteSortOrder
+    type_: AirbyteSortOrder
     """Type of user (person or bot)"""
 
 
@@ -557,7 +557,7 @@ class DataSourcesSearchFilter(TypedDict, total=False):
     """The user who last edited the data source."""
     last_edited_time: str | None
     """The timestamp when the data source was last edited."""
-    object: dict[str, Any] | None
+    object_: dict[str, Any] | None
     """The type of object (data_source)."""
     parent: dict[str, Any] | None
     """The parent database of the data source."""
@@ -595,7 +595,7 @@ class DataSourcesInFilter(TypedDict, total=False):
     """The user who last edited the data source."""
     last_edited_time: list[str]
     """The timestamp when the data source was last edited."""
-    object: list[dict[str, Any]]
+    object_: list[dict[str, Any]]
     """The type of object (data_source)."""
     parent: list[dict[str, Any]]
     """The parent database of the data source."""
@@ -633,7 +633,7 @@ class DataSourcesAnyValueFilter(TypedDict, total=False):
     """The user who last edited the data source."""
     last_edited_time: Any
     """The timestamp when the data source was last edited."""
-    object: Any
+    object_: Any
     """The type of object (data_source)."""
     parent: Any
     """The parent database of the data source."""
@@ -671,7 +671,7 @@ class DataSourcesStringFilter(TypedDict, total=False):
     """The user who last edited the data source."""
     last_edited_time: str
     """The timestamp when the data source was last edited."""
-    object: str
+    object_: str
     """The type of object (data_source)."""
     parent: str
     """The parent database of the data source."""
@@ -709,7 +709,7 @@ class DataSourcesSortFilter(TypedDict, total=False):
     """The user who last edited the data source."""
     last_edited_time: AirbyteSortOrder
     """The timestamp when the data source was last edited."""
-    object: AirbyteSortOrder
+    object_: AirbyteSortOrder
     """The type of object (data_source)."""
     parent: AirbyteSortOrder
     """The parent database of the data source."""
@@ -874,7 +874,7 @@ class BlocksSearchFilter(TypedDict, total=False):
     """Provides a link to another page within the block"""
     numbered_list_item: dict[str, Any] | None
     """Represents an item in a numbered list."""
-    object: dict[str, Any] | None
+    object_: dict[str, Any] | None
     """Represents an object block."""
     paragraph: dict[str, Any] | None
     """Represents a paragraph block."""
@@ -898,7 +898,7 @@ class BlocksSearchFilter(TypedDict, total=False):
     """Represents a to-do list or task content"""
     toggle: dict[str, Any] | None
     """Represents a toggle block."""
-    type: dict[str, Any] | None
+    type_: dict[str, Any] | None
     """The type of the block."""
     unsupported: dict[str, Any] | None
     """Represents an unsupported block."""
@@ -962,7 +962,7 @@ class BlocksInFilter(TypedDict, total=False):
     """Provides a link to another page within the block"""
     numbered_list_item: list[dict[str, Any]]
     """Represents an item in a numbered list."""
-    object: list[dict[str, Any]]
+    object_: list[dict[str, Any]]
     """Represents an object block."""
     paragraph: list[dict[str, Any]]
     """Represents a paragraph block."""
@@ -986,7 +986,7 @@ class BlocksInFilter(TypedDict, total=False):
     """Represents a to-do list or task content"""
     toggle: list[dict[str, Any]]
     """Represents a toggle block."""
-    type: list[dict[str, Any]]
+    type_: list[dict[str, Any]]
     """The type of the block."""
     unsupported: list[dict[str, Any]]
     """Represents an unsupported block."""
@@ -1050,7 +1050,7 @@ class BlocksAnyValueFilter(TypedDict, total=False):
     """Provides a link to another page within the block"""
     numbered_list_item: Any
     """Represents an item in a numbered list."""
-    object: Any
+    object_: Any
     """Represents an object block."""
     paragraph: Any
     """Represents a paragraph block."""
@@ -1074,7 +1074,7 @@ class BlocksAnyValueFilter(TypedDict, total=False):
     """Represents a to-do list or task content"""
     toggle: Any
     """Represents a toggle block."""
-    type: Any
+    type_: Any
     """The type of the block."""
     unsupported: Any
     """Represents an unsupported block."""
@@ -1138,7 +1138,7 @@ class BlocksStringFilter(TypedDict, total=False):
     """Provides a link to another page within the block"""
     numbered_list_item: str
     """Represents an item in a numbered list."""
-    object: str
+    object_: str
     """Represents an object block."""
     paragraph: str
     """Represents a paragraph block."""
@@ -1162,7 +1162,7 @@ class BlocksStringFilter(TypedDict, total=False):
     """Represents a to-do list or task content"""
     toggle: str
     """Represents a toggle block."""
-    type: str
+    type_: str
     """The type of the block."""
     unsupported: str
     """Represents an unsupported block."""
@@ -1226,7 +1226,7 @@ class BlocksSortFilter(TypedDict, total=False):
     """Provides a link to another page within the block"""
     numbered_list_item: AirbyteSortOrder
     """Represents an item in a numbered list."""
-    object: AirbyteSortOrder
+    object_: AirbyteSortOrder
     """Represents an object block."""
     paragraph: AirbyteSortOrder
     """Represents a paragraph block."""
@@ -1250,7 +1250,7 @@ class BlocksSortFilter(TypedDict, total=False):
     """Represents a to-do list or task content"""
     toggle: AirbyteSortOrder
     """Represents a toggle block."""
-    type: AirbyteSortOrder
+    type_: AirbyteSortOrder
     """The type of the block."""
     unsupported: AirbyteSortOrder
     """Represents an unsupported block."""
