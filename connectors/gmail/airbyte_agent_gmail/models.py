@@ -116,7 +116,7 @@ class Label(BaseModel):
 
     id: Union[str, Any] = Field(default=None)
     name: Union[str | None, Any] = Field(default=None)
-    type: Union[str | None, Any] = Field(default=None)
+    type_: Union[str | None, Any] = Field(default=None, alias="type")
     message_list_visibility: Union[str | None, Any] = Field(default=None, alias="messageListVisibility")
     label_list_visibility: Union[str | None, Any] = Field(default=None, alias="labelListVisibility")
     messages_total: Union[int | None, Any] = Field(default=None, alias="messagesTotal")
