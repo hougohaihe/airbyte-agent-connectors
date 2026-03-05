@@ -731,9 +731,9 @@ class UsersQuery:
         - bot: Bot-specific data
         - id: Unique identifier for the user
         - name: User's display name
-        - object: Always user
+        - object_: Always user
         - person: Person-specific data
-        - type: Type of user (person or bot)
+        - type_: Type of user (person or bot)
 
         Args:
             query: Filter and sort conditions. Supports operators like eq, neq, gt, gte, lt, lte,
@@ -869,7 +869,7 @@ class PagesQuery:
         - in_trash: Indicates whether the page is in trash or not.
         - last_edited_by: User ID or name of the last editor of the page.
         - last_edited_time: Date and time when the page was last edited.
-        - object: Type or category of the page object.
+        - object_: Type or category of the page object.
         - parent: ID or reference to the parent page.
         - properties: Custom properties associated with the page.
         - public_url: Publicly accessible URL of the page.
@@ -1011,7 +1011,7 @@ class DataSourcesQuery:
         - is_inline: Indicates if the data source is displayed inline.
         - last_edited_by: The user who last edited the data source.
         - last_edited_time: The timestamp when the data source was last edited.
-        - object: The type of object (data_source).
+        - object_: The type of object (data_source).
         - parent: The parent database of the data source.
         - properties: Schema of properties for the data source.
         - public_url: Public URL to access the data source.
@@ -1167,7 +1167,7 @@ class BlocksQuery:
         - link_preview: Displays a preview of an external link within the block
         - link_to_page: Provides a link to another page within the block
         - numbered_list_item: Represents an item in a numbered list.
-        - object: Represents an object block.
+        - object_: Represents an object block.
         - paragraph: Represents a paragraph block.
         - parent: The parent block of the current block.
         - pdf: Represents a PDF document block.
@@ -1179,7 +1179,7 @@ class BlocksQuery:
         - template: Specifies a template used within the block
         - to_do: Represents a to-do list or task content
         - toggle: Represents a toggle block.
-        - type: The type of the block.
+        - type_: The type of the block.
         - unsupported: Represents an unsupported block.
         - video: Represents a video block.
 
