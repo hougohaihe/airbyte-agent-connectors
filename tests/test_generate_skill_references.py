@@ -643,9 +643,21 @@ def test_generate_skill_md_has_operational_content():
         },
     ]
     result = generate_skill_md(metadata)
-    # Must have YAML frontmatter
+    # Must have YAML frontmatter with only name and description
     assert result.startswith("---")
     assert "name: airbyte-agent-connectors" in result
+    assert "description:" in result
+    # Frontmatter must NOT contain non-standard fields (Claude Code spec)
+    # Extract frontmatter block (between first and second ---)
+    fm_end = result.index("---", 3)
+    frontmatter = result[:fm_end]
+    assert "license:" not in frontmatter
+    assert "compatibility:" not in frontmatter
+    assert "metadata:" not in frontmatter
+    assert "author:" not in frontmatter
+    assert "version:" not in frontmatter
+    assert "repo:" not in frontmatter
+    assert "mcp-server:" not in frontmatter
     # Must have operational sections
     assert "## Mode Detection" in result
     assert "Platform Mode" in result
@@ -655,6 +667,22 @@ def test_generate_skill_md_has_operational_content():
     assert "## Security Best Practices" in result
     # Must have pagination example
     assert "fetch_all" in result
+    # Must have Skill Metadata section in body (not frontmatter)
+    assert "## Skill Metadata" in result
+    assert "**Author:** Airbyte" in result
+    assert "**License:** Elastic-2.0" in result
+    assert "**Repository:** https://github.com/airbytehq/airbyte-agent-connectors" in result
+    assert "**MCP Server:** airbyte-agent-mcp" in result
+    # Must have Reference Documentation table with all 8 links
+    assert "## Reference Documentation" in result
+    assert "references/getting-started.md" in result
+    assert "references/platform-setup.md" in result
+    assert "references/oss-setup.md" in result
+    assert "references/entity-action-api.md" in result
+    assert "references/authentication.md" in result
+    assert "references/programmatic-setup.md" in result
+    assert "references/mcp-integration.md" in result
+    assert "references/troubleshooting.md" in result
 
 
 def test_brand_display_name():
