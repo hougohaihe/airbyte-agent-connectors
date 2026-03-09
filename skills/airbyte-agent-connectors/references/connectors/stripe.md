@@ -1,55 +1,116 @@
 <!-- AUTO-GENERATED from connectors/stripe/ -- do not edit manually -->
 <!-- Source format: v1 | Generated: 2026-03-09 -->
 
-# Airbyte Stripe AI Connector
+# Stripe
 
-# Package: airbyte-ai-stripe v0.5.0
+**Package:** `airbyte-agent-stripe` v0.5.113
 
-Type-safe Stripe API connector with full IDE autocomplete support for AI applications.
+The Stripe agent connector is a Python package that equips AI agents to interact with Stripe through strongly typed, well-documented tools. It's ready to use directly in your Python app, in an agent framework, or exposed through an MCP.
 
 **Key metadata:**
 
-- **Package:** `airbyte-ai-stripe` v0.5.0
-- **Auth:** StripeAuthConfig (token)
-- **Docs:** [Official API docs](https://github.com/airbytehq/airbyte-ai-connectors/tree/main/connectors/stripe)
-- **Status:** docs pending
+- **Package:** `airbyte-agent-stripe` v0.5.113
+- **Auth:** OAuth, Token, Bring your own OAuth flow, Execution
+- **Docs:** [Official API docs](https://docs.stripe.com/api)
+- **Status:** complete
+
+## Example Prompts
+
+- List customers created in the last 7 days
+- Show me details for a recent customer
+- List recent charges
+- Show me details for a recent charge
+- List recent invoices
+- List active subscriptions
+- Show me my top 10 customers by total revenue this month
+- List all customers who have spent over $5,000 in the last quarter
+- Analyze payment trends for my Stripe customers
+- Identify which customers have the most consistent subscription payments
+- Give me insights into my customer retention rates
+- Summarize the payment history for \{customer\}
+- Compare customer spending patterns from last month to this month
+- Show me details about my highest-value Stripe customers
+- What are the key financial insights from my customer base?
+- Break down my customers by their average transaction value
+
+## Unsupported
+
+- Create a new customer profile in Stripe
+- Update the billing information for \{customer\}
+- Delete a customer record
+- Send a payment reminder to \{customer\}
+- Schedule an automatic invoice for \{company\}
 
 ## Quick Start
 
 ### Installation
 
 ```bash
-uv pip install airbyte-ai-stripe
+uv pip install airbyte-agent-stripe
 ```
 
-### Usage
+### OSS Mode
 
 ```python
-from airbyte_ai_stripe import StripeConnector
-from airbyte_ai_stripe.models import StripeAuthConfig
+from airbyte_agent_stripe import StripeConnector
+from airbyte_agent_stripe.models import StripeAuthConfig
 
-# Create connector
-connector = StripeConnector(auth_config=StripeAuthConfig(token="..."))
+connector = StripeConnector(
+    auth_config=StripeAuthConfig(
+        api_key="<Your Stripe API Key (starts with sk_test_ or sk_live_)>"
+    )
+)
 
-# Use typed methods with full IDE autocomplete
-# (See Available Operations below for all methods)
+@agent.tool_plain # assumes you're using Pydantic AI
+@StripeConnector.tool_utils
+async def stripe_execute(entity: str, action: str, params: dict | None = None):
+    return await connector.execute(entity, action, params or {})
+```
+
+### Hosted Mode
+
+```python
+from airbyte_agent_stripe import StripeConnector, AirbyteAuthConfig
+
+connector = StripeConnector(
+    auth_config=AirbyteAuthConfig(
+        customer_name="<your_customer_name>",
+        organization_id="<your_organization_id>",  # Optional for multi-org clients
+        airbyte_client_id="<your-client-id>",
+        airbyte_client_secret="<your-client-secret>"
+    )
+)
+
+@agent.tool_plain # assumes you're using Pydantic AI
+@StripeConnector.tool_utils
+async def stripe_execute(entity: str, action: str, params: dict | None = None):
+    return await connector.execute(entity, action, params or {})
 ```
 
 ## Entities and Actions
 
-| Entity | Action | Description |
-|--------|--------|-------------|
-| Customers | `customers__list()` | Returns a list of customers |
-| Customers | `customers__get()` | Gets the details of an existing customer |
+| Entity | Actions |
+|--------|---------|
+| Customers | List, Create, Get, Update, Delete, API Search, Search |
+| Invoices | List, Get, API Search, Search |
+| Charges | List, Get, API Search, Search |
+| Subscriptions | List, Get, API Search, Search |
+| Refunds | List, Create, Get, Search |
+| Products | List, Create, Get, Update, Delete, API Search |
+| Balance | Get |
+| Balance Transactions | List, Get |
+| Payment Intents | List, Get, API Search |
+| Disputes | List, Get |
+| Payouts | List, Get |
 
 ## Authentication
 
-Auth class: `StripeAuthConfig`
+For all authentication options, see the connector's [authentication documentation](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/stripe/AUTH.md).
 
-Required fields:
+## API Reference
 
-- `token`
+For the full API reference with parameters and examples, see the connector's [reference documentation](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/stripe/REFERENCE.md).
 
 ---
 
-*[Full docs on GitHub](https://github.com/airbytehq/airbyte-ai-connectors/tree/main/connectors/stripe)*
+*[Full docs on GitHub](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/stripe)*

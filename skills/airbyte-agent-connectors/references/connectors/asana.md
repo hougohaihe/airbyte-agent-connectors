@@ -1,61 +1,122 @@
 <!-- AUTO-GENERATED from connectors/asana/ -- do not edit manually -->
 <!-- Source format: v1 | Generated: 2026-03-09 -->
 
-# Airbyte Asana AI Connector
+# Asana
 
-# Package: airbyte-ai-asana v0.19.0
+**Package:** `airbyte-agent-asana` v0.19.118
 
-Type-safe Asana API connector with full IDE autocomplete support for AI applications.
+The Asana agent connector is a Python package that equips AI agents to interact with Asana through strongly typed, well-documented tools. It's ready to use directly in your Python app, in an agent framework, or exposed through an MCP.
 
 **Key metadata:**
 
-- **Package:** `airbyte-ai-asana` v0.19.0
-- **Auth:** AsanaAuthConfig (token)
-- **Docs:** [Official API docs](https://github.com/airbytehq/airbyte-ai-connectors/tree/main/connectors/asana)
-- **Status:** docs pending
+- **Package:** `airbyte-agent-asana` v0.19.118
+- **Auth:** OAuth, Token, Bring your own OAuth flow, Execution
+- **Docs:** [Official API docs](https://developers.asana.com/reference/rest-api-reference)
+- **Status:** complete
+
+## Example Prompts
+
+- What tasks are assigned to me this week?
+- List all projects in my workspace
+- Show me the tasks for a recent project
+- Who are the team members in one of my teams?
+- Show me details of my current workspace and its users
+- Summarize my team's workload and task completion rates
+- Find all tasks related to \{client_name\} across my workspaces
+- Analyze the most active projects in my workspace last month
+- Compare task completion rates between my different teams
+- Identify overdue tasks across all my projects
+
+## Unsupported
+
+- Create a new task for [TeamMember]
+- Update the priority of this task
+- Delete the project [ProjectName]
+- Schedule a new team meeting
+- Add a new team member to [Workspace]
+- Move this task to another project
 
 ## Quick Start
 
 ### Installation
 
 ```bash
-uv pip install airbyte-ai-asana
+uv pip install airbyte-agent-asana
 ```
 
-### Usage
+### OSS Mode
 
 ```python
-from airbyte_ai_asana import AsanaConnector
-from airbyte_ai_asana.models import AsanaAuthConfig
+from airbyte_agent_asana import AsanaConnector
+from airbyte_agent_asana.models import AsanaPersonalAccessTokenAuthConfig
 
-# Create connector
-connector = AsanaConnector(auth_config=AsanaAuthConfig(token="..."))
+connector = AsanaConnector(
+    auth_config=AsanaPersonalAccessTokenAuthConfig(
+        token="<Your Asana Personal Access Token. Generate one at https://app.asana.com/0/my-apps>"
+    )
+)
 
-# Use typed methods with full IDE autocomplete
-# (See Available Operations below for all methods)
+@agent.tool_plain # assumes you're using Pydantic AI
+@AsanaConnector.tool_utils
+async def asana_execute(entity: str, action: str, params: dict | None = None):
+    return await connector.execute(entity, action, params or {})
+```
+
+### Hosted Mode
+
+```python
+from airbyte_agent_asana import AsanaConnector, AirbyteAuthConfig
+
+connector = AsanaConnector(
+    auth_config=AirbyteAuthConfig(
+        customer_name="<your_customer_name>",
+        organization_id="<your_organization_id>",  # Optional for multi-org clients
+        airbyte_client_id="<your-client-id>",
+        airbyte_client_secret="<your-client-secret>"
+    )
+)
+
+@agent.tool_plain # assumes you're using Pydantic AI
+@AsanaConnector.tool_utils
+async def asana_execute(entity: str, action: str, params: dict | None = None):
+    return await connector.execute(entity, action, params or {})
 ```
 
 ## Entities and Actions
 
-| Entity | Action | Description |
-|--------|--------|-------------|
-| Tasks | `list_tasks()` | Returns all tasks in a project |
-| Tasks | `get_task()` | Get a single task by its ID |
-| Projects | `list_projects()` | Returns a paginated list of projects |
-| Projects | `get_project()` | Get a single project by its ID |
-| Workspaces | `list_workspaces()` | Returns a paginated list of workspaces |
-| Workspaces | `get_workspace()` | Get a single workspace by its ID |
-| Users | `list_users()` | Returns a paginated list of users |
-| Users | `get_user()` | Get a single user by their ID |
+| Entity | Actions |
+|--------|---------|
+| Tasks | List, Get, Search |
+| Project Tasks | List |
+| Workspace Task Search | List |
+| Projects | List, Get, Search |
+| Task Projects | List |
+| Team Projects | List |
+| Workspace Projects | List |
+| Workspaces | List, Get, Search |
+| Users | List, Get, Search |
+| Workspace Users | List |
+| Team Users | List |
+| Teams | Get, Search |
+| Workspace Teams | List |
+| User Teams | List |
+| Attachments | List, Get, Download, Search |
+| Workspace Tags | List |
+| Tags | Get, Search |
+| Project Sections | List |
+| Sections | Get, Search |
+| Task Subtasks | List |
+| Task Dependencies | List |
+| Task Dependents | List |
 
 ## Authentication
 
-Auth class: `AsanaAuthConfig`
+For all authentication options, see the connector's [authentication documentation](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/asana/AUTH.md).
 
-Required fields:
+## API Reference
 
-- `token`
+For the full API reference with parameters and examples, see the connector's [reference documentation](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/asana/REFERENCE.md).
 
 ---
 
-*[Full docs on GitHub](https://github.com/airbytehq/airbyte-ai-connectors/tree/main/connectors/asana)*
+*[Full docs on GitHub](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/asana)*

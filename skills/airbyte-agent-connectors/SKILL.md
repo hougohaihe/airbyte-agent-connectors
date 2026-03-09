@@ -5,7 +5,7 @@ packages for integrating SaaS APIs into AI applications.
 
 ## Overview
 
-8 connectors available -- see the
+49 connectors available -- see the
 [Connector Index](references/connector-index.md) for the full list with
 auth types, key entities, and documentation status.
 
@@ -13,11 +13,11 @@ auth types, key entities, and documentation status.
 
 | Connector | Package | Description |
 |-----------|---------|-------------|
-| [Airbyte Stripe AI Connector](references/connectors/stripe.md) | `airbyte-ai-stripe` | See reference |
-| [Airbyte Hubspot AI Connector](references/connectors/hubspot.md) | `airbyte-ai-hubspot` | See reference |
-| [Airbyte Github AI Connector](references/connectors/github.md) | `airbyte-ai-github` | See reference |
-| [Airbyte Gong AI Connector](references/connectors/gong.md) | `airbyte-ai-gong` | See reference |
-| [Airbyte Asana AI Connector](references/connectors/asana.md) | `airbyte-ai-asana` | See reference |
+| [Stripe](references/connectors/stripe.md) | `airbyte-agent-stripe` | See reference |
+| [Hubspot](references/connectors/hubspot.md) | `airbyte-agent-hubspot` | See reference |
+| [Github](references/connectors/github.md) | `airbyte-agent-github` | See reference |
+| [Gong](references/connectors/gong.md) | `airbyte-agent-gong` | See reference |
+| [Asana](references/connectors/asana.md) | `airbyte-agent-asana` | See reference |
 
 > For the full table, see [references/connector-index.md](references/connector-index.md).
 
@@ -25,12 +25,12 @@ auth types, key entities, and documentation status.
 
 ```bash
 # Install a connector
-uv pip install airbyte-ai-<name>
+uv pip install airbyte-agent-<name>
 ```
 
 ```python
-from airbyte_ai_<name> import <Name>Connector
-from airbyte_ai_<name>.models import <Name>AuthConfig
+from airbyte_agent_<name> import <Name>Connector
+from airbyte_agent_<name>.models import <Name>AuthConfig
 
 connector = <Name>Connector(auth_config=<Name>AuthConfig(...))
 ```

@@ -11,9 +11,8 @@ from pathlib import Path
 
 import pytest
 
-# Ensure the scripts directory is importable
+# conftest.py handles sys.path setup for scripts/ importability.
 REPO_ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(REPO_ROOT / "scripts"))
 
 from generate_skill_references import (
     FORMAT_VERSION,
@@ -40,45 +39,71 @@ from generate_skill_references import (
 # Fixtures
 # ---------------------------------------------------------------------------
 
+# New format README matching actual connector README structure.
 SAMPLE_README = """\
-# Airbyte Stripe AI Connector
+# Stripe
 
-Type-safe Stripe API connector with full IDE autocomplete support for AI applications.
+The Stripe agent connector is a Python package for AI agents.
 
-**Package Version:** 0.5.0
+## Example questions
 
-**Connector Version:** 0.1.0
+- List customers created in the last 7 days
+- Show me details for a recent customer
 
-**SDK Version:** 0.1.0
+## Unsupported questions
+
+- Create a new customer profile in Stripe
+- Delete a customer record
 
 ## Installation
 
 ```bash
-uv pip install airbyte-ai-stripe
+uv pip install airbyte-agent-stripe
 ```
 
 ## Usage
 
-```python
-from airbyte_ai_stripe import StripeConnector
-from airbyte_ai_stripe.models import StripeAuthConfig
+### Open source
 
-connector = StripeConnector(auth_config=StripeAuthConfig(token="..."))
+```python
+from airbyte_agent_stripe import StripeConnector
+from airbyte_agent_stripe.models import StripeAuthConfig
+
+connector = StripeConnector(
+    auth_config=StripeAuthConfig(
+        api_key="<Your Stripe API Key>"
+    )
+)
 ```
 
-## Available Operations
+### Hosted
 
-### Customers Operations
-- `customers__list()` - Returns a list of customers
-- `customers__get()` - Gets the details of an existing customer
+```python
+from airbyte_agent_stripe import StripeConnector, AirbyteAuthConfig
 
-## Type Definitions
+connector = StripeConnector(
+    auth_config=AirbyteAuthConfig(
+        customer_name="<your_customer_name>"
+    )
+)
+```
 
-All response types are fully typed using TypedDict for IDE autocomplete support.
+## Full documentation
 
-## Documentation
+### Entities and actions
 
-Generated from OpenAPI 3.0 specification.
+| Entity | Actions |
+|--------|--------|
+| Customers | [List](REFERENCE.md#list), [Get](REFERENCE.md#get) |
+| Invoices | [List](REFERENCE.md#list-1) |
+
+### Stripe API docs
+
+For more information, visit the [Stripe API documentation](https://docs.stripe.com/api).
+
+## Version information
+
+**Package version:** 0.5.0
 """
 
 SAMPLE_README_MISSING_SECTION = """\
@@ -92,15 +117,18 @@ Some description.
 pass
 ```
 
-## Available Operations
+## Full documentation
 
-### Foo Operations
-- `foo()` - Does foo
+### Entities and actions
+
+| Entity | Actions |
+|--------|--------|
+| Foo | [Do](REFERENCE.md#do) |
 """
 
 SAMPLE_PYPROJECT = """\
 [project]
-name = "airbyte-ai-stripe"
+name = "airbyte-agent-stripe"
 version = "0.5.0"
 description = "Airbyte Stripe Connector for AI platforms"
 """
@@ -194,7 +222,7 @@ def _create_connector_fixture(
 @pytest.mark.parametrize(
     "content,expected_title",
     [
-        pytest.param(SAMPLE_README, "Airbyte Stripe AI Connector", id="standard_title"),
+        pytest.param(SAMPLE_README, "Stripe", id="standard_title"),
         pytest.param("# My Connector\n\nDesc.", "My Connector", id="simple_title"),
     ],
 )
@@ -205,18 +233,34 @@ def test_parse_readme_extracts_title(tmp_path: Path, content: str, expected_titl
     assert result["title"] == expected_title
 
 
+def test_parse_readme_extracts_example_questions(tmp_path: Path):
+    readme = tmp_path / "README.md"
+    readme.write_text(SAMPLE_README)
+    result = parse_readme(readme)
+    assert len(result["example_questions"]) == 2
+    assert "List customers" in result["example_questions"][0]
+
+
+def test_parse_readme_extracts_unsupported_questions(tmp_path: Path):
+    readme = tmp_path / "README.md"
+    readme.write_text(SAMPLE_README)
+    result = parse_readme(readme)
+    assert len(result["unsupported_questions"]) == 2
+    assert "Create" in result["unsupported_questions"][0]
+
+
 def test_parse_readme_extracts_description(tmp_path: Path):
     readme = tmp_path / "README.md"
     readme.write_text(SAMPLE_README)
     result = parse_readme(readme)
-    assert "Type-safe Stripe API connector" in result["description"]
+    assert "Stripe agent connector" in result["description"]
 
 
 def test_parse_readme_extracts_install_block(tmp_path: Path):
     readme = tmp_path / "README.md"
     readme.write_text(SAMPLE_README)
     result = parse_readme(readme)
-    assert "uv pip install airbyte-ai-stripe" in result["install_block"]
+    assert "uv pip install airbyte-agent-stripe" in result["install_block"]
 
 
 def test_parse_readme_extracts_usage_block(tmp_path: Path):
@@ -224,6 +268,9 @@ def test_parse_readme_extracts_usage_block(tmp_path: Path):
     readme.write_text(SAMPLE_README)
     result = parse_readme(readme)
     assert "StripeConnector" in result["usage_block"]
+    # OSS and Hosted subsections should be extracted
+    assert "StripeAuthConfig" in (result["oss_usage"] or "")
+    assert "AirbyteAuthConfig" in (result["hosted_usage"] or "")
 
 
 def test_parse_readme_extracts_operations(tmp_path: Path):
@@ -233,6 +280,7 @@ def test_parse_readme_extracts_operations(tmp_path: Path):
     assert len(result["ops_table"]) == 2
     entities = [e for e, _, _ in result["ops_table"]]
     assert "Customers" in entities
+    assert "Invoices" in entities
 
 
 def test_parse_readme_extracts_auth_class(tmp_path: Path):
@@ -240,7 +288,7 @@ def test_parse_readme_extracts_auth_class(tmp_path: Path):
     readme.write_text(SAMPLE_README)
     result = parse_readme(readme)
     assert result["auth_class"] == "StripeAuthConfig"
-    assert "token" in result["auth_fields"]
+    assert "api_key" in result["auth_fields"]
 
 
 @pytest.mark.parametrize(
@@ -248,13 +296,13 @@ def test_parse_readme_extracts_auth_class(tmp_path: Path):
     [
         pytest.param(
             SAMPLE_PYPROJECT,
-            "airbyte-ai-stripe",
+            "airbyte-agent-stripe",
             "0.5.0",
             id="standard_pyproject",
         ),
         pytest.param(
-            '[project]\nname = "airbyte-ai-gong"\nversion = "0.19.0"\n',
-            "airbyte-ai-gong",
+            '[project]\nname = "airbyte-agent-gong"\nversion = "0.19.0"\n',
+            "airbyte-agent-gong",
             "0.19.0",
             id="gong_pyproject",
         ),
@@ -324,8 +372,11 @@ def test_parse_reference_missing_file(tmp_path: Path):
 
 def test_validate_readme_structure_passes_standard():
     warnings = validate_readme_structure(SAMPLE_README, "stripe")
-    # Should pass without errors (may have warnings for missing optional sections)
+    # Should pass without errors; may have warnings for missing optional sections
     assert isinstance(warnings, list)
+    # All required sections present, so no ValueError raised
+    for w in warnings:
+        assert "missing expected section" not in w
 
 
 def test_format_validation_catches_changed_structure():
@@ -335,12 +386,9 @@ def test_format_validation_catches_changed_structure():
         validate_readme_structure(content, "test-connector")
 
 
-def test_validate_readme_warns_on_missing_optional_section():
-    """Missing optional sections produce warnings, not errors."""
-    # Has Installation and Usage but missing Type Definitions, etc.
+def test_validate_readme_raises_on_missing_critical_section():
+    """Missing Installation (critical) should raise ValueError."""
     content = SAMPLE_README_MISSING_SECTION
-    # This should not raise (Installation is missing, but let's check Usage missing)
-    # Actually SAMPLE_README_MISSING_SECTION is missing Installation — that raises
     with pytest.raises(ValueError, match="missing expected section.*Installation"):
         validate_readme_structure(content, "test")
 
@@ -442,7 +490,7 @@ def test_generate_connector_reference_header(tmp_path: Path):
     )
     assert "<!-- AUTO-GENERATED from connectors/stripe/" in content
     assert f"Source format: {FORMAT_VERSION}" in content
-    assert "# Package: airbyte-ai-stripe v0.5.0" in content
+    assert "**Package:** `airbyte-agent-stripe` v0.5.0" in content
 
 
 def test_generate_connector_reference_has_ops_table(tmp_path: Path):
@@ -533,22 +581,23 @@ def test_end_to_end_writes_to_output_dir(tmp_path: Path):
         tmp_path,
         "gong",
         readme=(
-            "# Airbyte Gong AI Connector\n\n"
-            "Type-safe Gong connector.\n\n"
-            "**Package Version:** 0.19.0\n\n"
-            "## Installation\n\n```bash\nuv pip install airbyte-ai-gong\n```\n\n"
+            "# Gong\n\n"
+            "The Gong agent connector.\n\n"
+            "## Installation\n\n```bash\nuv pip install airbyte-agent-gong\n```\n\n"
             "## Usage\n\n```python\n"
-            "from airbyte_ai_gong import GongConnector\n"
-            "from airbyte_ai_gong.models import GongAuthConfig\n"
+            "from airbyte_agent_gong import GongConnector\n"
+            "from airbyte_agent_gong.models import GongAuthConfig\n"
             "connector = GongConnector(auth_config=GongAuthConfig(access_key=\"...\"))\n"
             "```\n\n"
-            "## Available Operations\n\n"
-            "### Users Operations\n"
-            "- `list_users()` - Returns a list of users\n\n"
-            "## Type Definitions\n\nTyped.\n\n"
-            "## Documentation\n\nGenerated.\n"
+            "## Full documentation\n\n"
+            "### Entities and actions\n\n"
+            "| Entity | Actions |\n"
+            "|--------|--------|\n"
+            "| Users | [List](REFERENCE.md#list) |\n\n"
+            "## Version information\n\n"
+            "**Package version:** 0.19.0\n"
         ),
-        pyproject='[project]\nname = "airbyte-ai-gong"\nversion = "0.19.0"\n',
+        pyproject='[project]\nname = "airbyte-agent-gong"\nversion = "0.19.0"\n',
     )
 
     output_dir = tmp_path / "output"
@@ -658,16 +707,18 @@ def test_end_to_end_specific_connectors(tmp_path: Path):
         tmp_path,
         "gong",
         readme=(
-            "# Airbyte Gong AI Connector\n\nDesc.\n\n"
-            "**Package Version:** 0.19.0\n\n"
-            "## Installation\n\n```bash\nuv pip install airbyte-ai-gong\n```\n\n"
-            "## Usage\n\n```python\nfrom airbyte_ai_gong import GongConnector\n```\n\n"
-            "## Available Operations\n\n### Users Operations\n"
-            "- `list_users()` - List users\n\n"
-            "## Type Definitions\n\nTyped.\n\n"
-            "## Documentation\n\nGenerated.\n"
+            "# Gong\n\nThe Gong agent connector.\n\n"
+            "## Installation\n\n```bash\nuv pip install airbyte-agent-gong\n```\n\n"
+            "## Usage\n\n```python\nfrom airbyte_agent_gong import GongConnector\n```\n\n"
+            "## Full documentation\n\n"
+            "### Entities and actions\n\n"
+            "| Entity | Actions |\n"
+            "|--------|--------|\n"
+            "| Users | [List](REFERENCE.md#list) |\n\n"
+            "## Version information\n\n"
+            "**Package version:** 0.19.0\n"
         ),
-        pyproject='[project]\nname = "airbyte-ai-gong"\nversion = "0.19.0"\n',
+        pyproject='[project]\nname = "airbyte-agent-gong"\nversion = "0.19.0"\n',
     )
 
     output_dir = tmp_path / "output"

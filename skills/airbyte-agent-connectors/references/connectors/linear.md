@@ -1,59 +1,113 @@
 <!-- AUTO-GENERATED from connectors/linear/ -- do not edit manually -->
 <!-- Source format: v1 | Generated: 2026-03-09 -->
 
-# Airbyte Linear AI Connector
+# Linear
 
-# Package: airbyte-ai-linear v0.19.0
+**Package:** `airbyte-agent-linear` v0.19.112
 
-Type-safe Linear API connector with full IDE autocomplete support for AI applications.
+The Linear agent connector is a Python package that equips AI agents to interact with Linear through strongly typed, well-documented tools. It's ready to use directly in your Python app, in an agent framework, or exposed through an MCP.
 
 **Key metadata:**
 
-- **Package:** `airbyte-ai-linear` v0.19.0
-- **Auth:** LinearAuthConfig (api_key)
-- **Docs:** [Official API docs](https://github.com/airbytehq/airbyte-ai-connectors/tree/main/connectors/linear)
-- **Status:** docs pending
+- **Package:** `airbyte-agent-linear` v0.19.112
+- **Auth:** OAuth, Token, Bring your own OAuth flow, Execution
+- **Docs:** [Official API docs](https://linear.app/developers/graphql)
+- **Status:** complete
+
+## Example Prompts
+
+- Show me the open issues assigned to my team this week
+- List out all projects I'm currently involved in
+- List all users in my Linear workspace
+- Who is assigned to the most recently updated issue?
+- Create a new issue titled 'Fix login bug'
+- Update the priority of a recent issue to urgent
+- Change the title of a recent issue to 'Updated feature request'
+- Add a comment to a recent issue saying 'This is ready for review'
+- Update my most recent comment to say 'Revised feedback after testing'
+- Create a high priority issue about API performance
+- Assign a recent issue to a teammate
+- Unassign the current assignee from a recent issue
+- Reassign a recent issue from one teammate to another
+- Analyze the workload distribution across my development team
+- What are the top priority issues in our current sprint?
+- Identify the most active projects in our organization right now
+- Summarize the recent issues for \{team_member\} in the last two weeks
+- Compare the issue complexity across different teams
+- Which projects have the most unresolved issues?
+- Give me an overview of my team's current project backlog
+
+## Unsupported
+
+- Delete an outdated project from our workspace
+- Schedule a sprint planning meeting
+- Delete this issue
+- Remove a comment from an issue
 
 ## Quick Start
 
 ### Installation
 
 ```bash
-uv pip install airbyte-ai-linear
+uv pip install airbyte-agent-linear
 ```
 
-### Usage
+### OSS Mode
 
 ```python
-from airbyte_ai_linear import LinearConnector
-from airbyte_ai_linear.models import LinearAuthConfig
+from airbyte_agent_linear import LinearConnector
+from airbyte_agent_linear.models import LinearAuthConfig
 
-# Create connector
-connector = LinearConnector(auth_config=LinearAuthConfig(api_key="..."))
+connector = LinearConnector(
+    auth_config=LinearAuthConfig(
+        api_key="<Your Linear API key from Settings > API > Personal API keys>"
+    )
+)
 
-# Use typed methods with full IDE autocomplete
-# (See Available Operations below for all methods)
+@agent.tool_plain # assumes you're using Pydantic AI
+@LinearConnector.tool_utils
+async def linear_execute(entity: str, action: str, params: dict | None = None):
+    return await connector.execute(entity, action, params or {})
+```
+
+### Hosted Mode
+
+```python
+from airbyte_agent_linear import LinearConnector, AirbyteAuthConfig
+
+connector = LinearConnector(
+    auth_config=AirbyteAuthConfig(
+        customer_name="<your_customer_name>",
+        organization_id="<your_organization_id>",  # Optional for multi-org clients
+        airbyte_client_id="<your-client-id>",
+        airbyte_client_secret="<your-client-secret>"
+    )
+)
+
+@agent.tool_plain # assumes you're using Pydantic AI
+@LinearConnector.tool_utils
+async def linear_execute(entity: str, action: str, params: dict | None = None):
+    return await connector.execute(entity, action, params or {})
 ```
 
 ## Entities and Actions
 
-| Entity | Action | Description |
-|--------|--------|-------------|
-| Issues | `list_issues()` | Returns a paginated list of issues via GraphQL with pagination support |
-| Issues | `get_issue()` | Get a single issue by ID via GraphQL |
-| Projects | `list_projects()` | Returns a paginated list of projects via GraphQL with pagination support |
-| Projects | `get_project()` | Get a single project by ID via GraphQL |
-| Teams | `list_teams()` | Returns a list of teams via GraphQL with pagination support |
-| Teams | `get_team()` | Get a single team by ID via GraphQL |
+| Entity | Actions |
+|--------|---------|
+| Issues | List, Get, Create, Update, Search |
+| Projects | List, Get, Search |
+| Teams | List, Get, Search |
+| Users | List, Get, Search |
+| Comments | List, Get, Create, Update, Search |
 
 ## Authentication
 
-Auth class: `LinearAuthConfig`
+For all authentication options, see the connector's [authentication documentation](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/linear/AUTH.md).
 
-Required fields:
+## API Reference
 
-- `api_key`
+For the full API reference with parameters and examples, see the connector's [reference documentation](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/linear/REFERENCE.md).
 
 ---
 
-*[Full docs on GitHub](https://github.com/airbytehq/airbyte-ai-connectors/tree/main/connectors/linear)*
+*[Full docs on GitHub](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/linear)*

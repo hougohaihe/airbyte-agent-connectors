@@ -52,9 +52,14 @@ FORMAT_VERSION = "v1"
 EXPECTED_README_SECTIONS = [
     "Installation",
     "Usage",
-    "Available Operations",
-    "Type Definitions",
-    "Documentation",
+    "Full documentation",
+    "Version information",
+]
+
+# Optional sections that produce warnings (not errors) when missing.
+OPTIONAL_README_SECTIONS = [
+    "Example questions",
+    "Unsupported questions",
 ]
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -175,7 +180,35 @@ def validate_readme_structure(content: str, connector_name: str) -> list[str]:
             if section in ("Installation", "Usage"):
                 raise ValueError(msg)
             warnings.append(msg)
+    for section in OPTIONAL_README_SECTIONS:
+        if section not in present:
+            msg = (
+                f"{connector_name}/README.md missing optional section "
+                f"'## {section}'."
+            )
+            warnings.append(msg)
     return warnings
+
+
+def _parse_entity_actions_table(text: str) -> list[tuple[str, str]]:
+    """Parse a ``| Entity | Actions |`` markdown table.
+
+    Returns a list of (entity_name, actions_string) tuples where
+    *actions_string* is the raw markdown cell content (may contain links).
+    """
+    rows: list[tuple[str, str]] = []
+    for line in text.splitlines():
+        line = line.strip()
+        if not line.startswith("|") or line.startswith("|---") or line.startswith("| Entity"):
+            continue
+        cells = [c.strip() for c in line.split("|")]
+        # split on | gives ["", cell1, cell2, ..., ""]  for a row like | A | B |
+        if len(cells) >= 3:
+            entity = cells[1].strip()
+            actions = cells[2].strip()
+            if entity and entity != "Entity":
+                rows.append((entity, actions))
+    return rows
 
 
 def parse_readme(path: Path) -> dict:
@@ -187,37 +220,82 @@ def parse_readme(path: Path) -> dict:
     title_match = re.search(r"^#\s+(.+)", content, re.MULTILINE)
     title = title_match.group(1).strip() if title_match else path.parent.name.title()
 
-    # Description: first paragraph after title
+    # Description: first non-empty paragraph after the title line and any
+    # single-paragraph intro that follows immediately.
     lines_after_title = content.split("\n", 1)[1] if "\n" in content else ""
     description = _first_paragraph(lines_after_title)
 
-    # Package version from bold text
+    # Package version from "Version information" section
+    version_section = sections.get("Version information", "")
     pkg_version_match = re.search(
-        r"\*\*Package Version:\*\*\s*(\S+)", content
+        r"\*\*Package version:\*\*\s*(\S+)", version_section
     )
+    if not pkg_version_match:
+        # Legacy format fallback
+        pkg_version_match = re.search(
+            r"\*\*Package Version:\*\*\s*(\S+)", content
+        )
     pkg_version = pkg_version_match.group(1) if pkg_version_match else None
 
     # Install command
     install_block = _extract_code_block(sections.get("Installation", ""))
 
-    # Usage code
-    usage_block = _extract_code_block(sections.get("Usage", ""))
+    # Usage section — extract OSS and Hosted subsections
+    usage_body = sections.get("Usage", "")
+    usage_subsections = _extract_subsections(usage_body, level=3)
+    oss_usage = _extract_code_block(usage_subsections.get("Open source", ""))
+    hosted_usage = _extract_code_block(usage_subsections.get("Hosted", ""))
+    # Fallback: if no subsections, grab first code block from Usage
+    usage_block = oss_usage or _extract_code_block(usage_body)
 
-    # Operations — extract ### subsections
-    ops_body = sections.get("Available Operations", "")
-    operations = _extract_subsections(ops_body, level=3)
+    # Example questions
+    example_questions = _extract_bullet_list(
+        sections.get("Example questions", "")
+    )
 
-    # Build operations table: list of (entity, action, description)
+    # Unsupported questions
+    unsupported_questions = _extract_bullet_list(
+        sections.get("Unsupported questions", "")
+    )
+
+    # Operations — new format uses "## Full documentation" with
+    # "### Entities and actions" containing a | Entity | Actions | table.
+    full_docs = sections.get("Full documentation", "")
+    full_docs_subsections = _extract_subsections(full_docs, level=3)
+    entities_body = full_docs_subsections.get("Entities and actions", "")
+    entity_actions_table = _parse_entity_actions_table(entities_body)
+
+    # Legacy fallback: "## Available Operations" with ### subsections
     ops_table: list[tuple[str, str, str]] = []
-    for entity_heading, entity_body in operations.items():
-        entity_name = entity_heading.replace(" Operations", "")
-        for item in _extract_bullet_list(entity_body):
-            # Pattern: `method_name()` - description
-            m = re.match(r"`([^`]+)`\s*[-\u2013\u2014]\s*(.*)", item)
-            if m:
-                ops_table.append((entity_name, m.group(1), m.group(2)))
+    if entity_actions_table:
+        for entity_name, actions_str in entity_actions_table:
+            # Extract action names from markdown links like [List](...), [Get](...)
+            action_names = re.findall(r"\[([^\]]+)\]", actions_str)
+            if action_names:
+                ops_table.append((entity_name, ", ".join(action_names), ""))
+            else:
+                ops_table.append((entity_name, actions_str, ""))
+    else:
+        # Legacy format: "## Available Operations" with ### subsections
+        ops_body = sections.get("Available Operations", "")
+        operations = _extract_subsections(ops_body, level=3)
+        for entity_heading, entity_body in operations.items():
+            entity_name = entity_heading.replace(" Operations", "")
+            for item in _extract_bullet_list(entity_body):
+                m = re.match(r"`([^`]+)`\s*[-\u2013\u2014]\s*(.*)", item)
+                if m:
+                    ops_table.append((entity_name, m.group(1), m.group(2)))
 
-    # Auth info — extract from Usage code block
+    # API docs link — from "### {Name} API docs" subsection
+    api_docs_link = ""
+    for sub_name, sub_body in full_docs_subsections.items():
+        if sub_name.endswith("API docs"):
+            link_match = re.search(r"\[([^\]]+)\]\(([^)]+)\)", sub_body)
+            if link_match:
+                api_docs_link = link_match.group(2)
+            break
+
+    # Auth info — extract from Usage code block (OSS mode)
     auth_match = re.search(r"(\w+AuthConfig)\(([^)]*)\)", usage_block)
     auth_class = auth_match.group(1) if auth_match else None
     auth_params_raw = auth_match.group(2) if auth_match else ""
@@ -229,8 +307,13 @@ def parse_readme(path: Path) -> dict:
         "pkg_version": pkg_version,
         "install_block": install_block,
         "usage_block": usage_block,
-        "operations": operations,
+        "oss_usage": oss_usage,
+        "hosted_usage": hosted_usage,
+        "example_questions": example_questions,
+        "unsupported_questions": unsupported_questions,
         "ops_table": ops_table,
+        "entity_actions_table": entity_actions_table,
+        "api_docs_link": api_docs_link,
         "auth_class": auth_class,
         "auth_fields": auth_fields,
         "raw_content": content,
@@ -313,7 +396,9 @@ def parse_reference(path: Path) -> dict:
 def parse_pyproject(path: Path) -> dict:
     """Parse a pyproject.toml and return project metadata."""
     if tomllib is None:
-        # Fallback: regex extraction
+        # Fallback: regex extraction — only handles simple single-line
+        # key = "value" patterns. Sufficient for SDK-generated pyproject.toml
+        # files but will not handle multiline strings or inline tables.
         content = path.read_text(encoding="utf-8")
         name_m = re.search(r'^name\s*=\s*"([^"]+)"', content, re.MULTILINE)
         ver_m = re.search(r'^version\s*=\s*"([^"]+)"', content, re.MULTILINE)
@@ -414,6 +499,9 @@ def generate_connector_reference(
 
     github_link = f"{GITHUB_BASE}/tree/main/connectors/{name}"
 
+    # API docs link
+    api_docs_link = readme.get("api_docs_link", "")
+
     # --- Build output ---
     lines: list[str] = []
 
@@ -423,19 +511,36 @@ def generate_connector_reference(
     lines.append("")
     lines.append(f"# {display_name}")
     lines.append("")
-    lines.append(f"# Package: {pkg_name} v{version}")
+    lines.append(f"**Package:** `{pkg_name}` v{version}")
     lines.append("")
     lines.append(description)
     lines.append("")
 
     # Key metadata
+    docs_link = api_docs_link or github_link
     lines.append("**Key metadata:**")
     lines.append("")
     lines.append(f"- **Package:** `{pkg_name}` v{version}")
     lines.append(f"- **Auth:** {auth_summary}")
-    lines.append(f"- **Docs:** [Official API docs]({github_link})")
+    lines.append(f"- **Docs:** [Official API docs]({docs_link})")
     lines.append(f"- **Status:** {docs_status}")
     lines.append("")
+
+    # Example prompts
+    if readme.get("example_questions"):
+        lines.append("## Example Prompts")
+        lines.append("")
+        for q in readme["example_questions"]:
+            lines.append(f"- {q}")
+        lines.append("")
+
+    # Unsupported
+    if readme.get("unsupported_questions"):
+        lines.append("## Unsupported")
+        lines.append("")
+        for q in readme["unsupported_questions"]:
+            lines.append(f"- {q}")
+        lines.append("")
 
     # Quick Start
     lines.append("## Quick Start")
@@ -445,7 +550,20 @@ def generate_connector_reference(
         lines.append("")
         lines.append(readme["install_block"])
         lines.append("")
-    if readme["usage_block"]:
+
+    # OSS and Hosted usage
+    if readme.get("oss_usage"):
+        lines.append("### OSS Mode")
+        lines.append("")
+        lines.append(readme["oss_usage"])
+        lines.append("")
+    if readme.get("hosted_usage"):
+        lines.append("### Hosted Mode")
+        lines.append("")
+        lines.append(readme["hosted_usage"])
+        lines.append("")
+    elif readme["usage_block"] and not readme.get("oss_usage"):
+        # Fallback for legacy format
         lines.append("### Usage")
         lines.append("")
         lines.append(readme["usage_block"])
@@ -455,51 +573,38 @@ def generate_connector_reference(
     if readme["ops_table"]:
         lines.append("## Entities and Actions")
         lines.append("")
-        lines.append("| Entity | Action | Description |")
-        lines.append("|--------|--------|-------------|")
-        for entity, action, desc in readme["ops_table"]:
-            lines.append(f"| {entity} | `{action}` | {desc} |")
+        lines.append("| Entity | Actions |")
+        lines.append("|--------|---------|")
+        for entity, actions, _desc in readme["ops_table"]:
+            lines.append(f"| {entity} | {actions} |")
         lines.append("")
 
     # Authentication section
     if auth["exists"] and auth["methods"]:
         lines.append("## Authentication")
         lines.append("")
-        for method in auth["methods"]:
-            lines.append(f"### {method['name']}")
-            lines.append("")
-            lines.append(method["body"])
-            lines.append("")
+        auth_link = f"{GITHUB_BASE}/blob/main/connectors/{name}/AUTH.md"
+        lines.append(f"For all authentication options, see the connector's [authentication documentation]({auth_link}).")
+        lines.append("")
     elif readme["auth_class"]:
         lines.append("## Authentication")
         lines.append("")
         lines.append(f"Auth class: `{readme['auth_class']}`")
         lines.append("")
         if readme["auth_fields"]:
-            lines.append("Required fields:")
+            lines.append("Detected auth fields (from usage example):")
             lines.append("")
             for field in readme["auth_fields"]:
                 lines.append(f"- `{field}`")
             lines.append("")
 
-    # API Reference (from REFERENCE.md)
-    if reference["exists"] and reference["entities"]:
+    # API Reference — link to REFERENCE.md instead of inlining
+    if reference["exists"]:
         lines.append("## API Reference")
         lines.append("")
-        for entity in reference["entities"]:
-            lines.append(f"### {entity['name']}")
-            lines.append("")
-            for action in entity["actions"]:
-                lines.append(f"#### {action['name']}")
-                lines.append("")
-                if action["parameter_tables"]:
-                    for table in action["parameter_tables"]:
-                        lines.append(table)
-                        lines.append("")
-                if action["code_examples"]:
-                    for code in action["code_examples"]:
-                        lines.append(code)
-                        lines.append("")
+        ref_link = f"{GITHUB_BASE}/blob/main/connectors/{name}/REFERENCE.md"
+        lines.append(f"For the full API reference with parameters and examples, see the connector's [reference documentation]({ref_link}).")
+        lines.append("")
 
     # Footer
     lines.append("---")
@@ -558,6 +663,9 @@ def generate_connector_index(
         pkg = f"`{meta['pkg_name']}`"
         auth = meta["auth_summary"]
         entities = meta["key_entities"] or "--"
+        # Truncate long entity lists for readable table rows
+        if len(entities) > 60:
+            entities = entities[:57] + "..."
         status = meta["docs_status"]
         lines.append(f"| {link} | {pkg} | {auth} | {entities} | {status} |")
 
@@ -593,12 +701,12 @@ auth types, key entities, and documentation status.
 
 ```bash
 # Install a connector
-uv pip install airbyte-ai-<name>
+uv pip install airbyte-agent-<name>
 ```
 
 ```python
-from airbyte_ai_<name> import <Name>Connector
-from airbyte_ai_<name>.models import <Name>AuthConfig
+from airbyte_agent_<name> import <Name>Connector
+from airbyte_agent_<name>.models import <Name>AuthConfig
 
 connector = <Name>Connector(auth_config=<Name>AuthConfig(...))
 ```
@@ -890,7 +998,8 @@ def main(argv: list[str] | None = None) -> int:
 
     # Determine output directory
     if args.dry_run and not args.output_dir:
-        output_dir = Path(tempfile.mkdtemp(prefix="skill-dryrun-"))
+        _tmpdir = tempfile.TemporaryDirectory(prefix="skill-dryrun-")
+        output_dir = Path(_tmpdir.name)
         logger.info("Dry-run output directory: %s", output_dir)
     elif args.output_dir:
         output_dir = args.output_dir

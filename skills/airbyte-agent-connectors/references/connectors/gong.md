@@ -1,72 +1,118 @@
 <!-- AUTO-GENERATED from connectors/gong/ -- do not edit manually -->
 <!-- Source format: v1 | Generated: 2026-03-09 -->
 
-# Airbyte Gong AI Connector
+# Gong
 
-# Package: airbyte-ai-gong v0.19.0
+**Package:** `airbyte-agent-gong` v0.19.121
 
-Type-safe Gong API connector with full IDE autocomplete support for AI applications.
+The Gong agent connector is a Python package that equips AI agents to interact with Gong through strongly typed, well-documented tools. It's ready to use directly in your Python app, in an agent framework, or exposed through an MCP.
 
 **Key metadata:**
 
-- **Package:** `airbyte-ai-gong` v0.19.0
-- **Auth:** GongAuthConfig (access_key, access_key_secret)
-- **Docs:** [Official API docs](https://github.com/airbytehq/airbyte-ai-connectors/tree/main/connectors/gong)
-- **Status:** docs pending
+- **Package:** `airbyte-agent-gong` v0.19.121
+- **Auth:** OAuth, Token, Bring your own OAuth flow, Execution
+- **Docs:** [Official API docs](https://gong.app.gong.io/settings/api/documentation)
+- **Status:** complete
+
+## Example Prompts
+
+- List all users in my Gong account
+- Show me calls from last week
+- Get the transcript for a recent call
+- List all workspaces in Gong
+- Show me the scorecard configurations
+- What trackers are set up in my account?
+- Get coaching metrics for a manager
+- What are the activity stats for our sales team?
+- Find calls mentioning \{keyword\} this month
+- Show me calls for rep \{user_id\} in the last 30 days
+- Which calls had the longest duration last week?
+
+## Unsupported
+
+- Create a new user in Gong
+- Delete a call recording
+- Update scorecard questions
+- Schedule a new meeting
+- Send feedback to a team member
+- Modify tracker keywords
 
 ## Quick Start
 
 ### Installation
 
 ```bash
-uv pip install airbyte-ai-gong
+uv pip install airbyte-agent-gong
 ```
 
-### Usage
+### OSS Mode
 
 ```python
-from airbyte_ai_gong import GongConnector
-from airbyte_ai_gong.models import GongAuthConfig
+from airbyte_agent_gong import GongConnector
+from airbyte_agent_gong.models import GongAccessKeyAuthenticationAuthConfig
 
-# Create connector
-connector = GongConnector(auth_config=GongAuthConfig(access_key="...", access_key_secret="..."))
+connector = GongConnector(
+    auth_config=GongAccessKeyAuthenticationAuthConfig(
+        access_key="<Your Gong API Access Key>",
+        access_key_secret="<Your Gong API Access Key Secret>"
+    )
+)
 
-# Use typed methods with full IDE autocomplete
-# (See Available Operations below for all methods)
+@agent.tool_plain # assumes you're using Pydantic AI
+@GongConnector.tool_utils
+async def gong_execute(entity: str, action: str, params: dict | None = None):
+    return await connector.execute(entity, action, params or {})
+```
+
+### Hosted Mode
+
+```python
+from airbyte_agent_gong import GongConnector, AirbyteAuthConfig
+
+connector = GongConnector(
+    auth_config=AirbyteAuthConfig(
+        customer_name="<your_customer_name>",
+        organization_id="<your_organization_id>",  # Optional for multi-org clients
+        airbyte_client_id="<your-client-id>",
+        airbyte_client_secret="<your-client-secret>"
+    )
+)
+
+@agent.tool_plain # assumes you're using Pydantic AI
+@GongConnector.tool_utils
+async def gong_execute(entity: str, action: str, params: dict | None = None):
+    return await connector.execute(entity, action, params or {})
 ```
 
 ## Entities and Actions
 
-| Entity | Action | Description |
-|--------|--------|-------------|
-| Users | `list_users()` | Returns a list of all users in the Gong account |
-| Users | `get_user()` | Get a single user by ID |
-| Calls | `list_calls()` | Retrieve calls data by date range |
-| Calls | `get_call()` | Get specific call data by ID |
-| Calls_Extensive | `list_calls_extensive()` | Retrieve detailed call data including participants, interaction stats, and content |
-| Call_Audio | `download_call_audio()` | Downloads the audio media file for a call. Temporarily, the request body must be configured with: |
-| Call_Video | `download_call_video()` | Downloads the video media file for a call. Temporarily, the request body must be configured with: |
-| Workspaces | `list_workspaces()` | List all company workspaces |
-| Call_Transcripts | `get_call_transcripts()` | Returns transcripts for calls in a specified date range or specific call IDs |
-| Stats_Activity_Aggregate | `get_activity_aggregate()` | Provides aggregated user activity metrics across a specified period |
-| Stats_Activity_Day_By_Day | `get_activity_day_by_day()` | Delivers daily user activity metrics across a specified date range |
-| Stats_Interaction | `get_interaction_stats()` | Returns interaction stats for users based on calls that have Whisper turned on |
-| Settings_Scorecards | `list_scorecards()` | Retrieve all scorecard configurations in the company |
-| Settings_Trackers | `list_trackers()` | Retrieve all keyword tracker configurations in the company |
-| Library_Folders | `list_library_folders()` | Retrieve the folder structure of the call library |
-| Library_Folder_Content | `list_folder_content()` | Retrieve calls in a specific library folder |
-| Coaching | `list_coaching_metrics()` | Retrieve coaching metrics for a manager and their direct reports |
-| Stats_Activity_Scorecards | `list_answered_scorecards()` | Retrieve answered scorecards for applicable reviewed users or scorecards for a date range |
+| Entity | Actions |
+|--------|---------|
+| Users | List, Get, Search |
+| Calls | List, Get, Search |
+| Calls Extensive | List, Search |
+| Call Audio | Download |
+| Call Video | Download |
+| Workspaces | List |
+| Call Transcripts | List |
+| Stats Activity Aggregate | List |
+| Stats Activity Day By Day | List |
+| Stats Interaction | List |
+| Settings Scorecards | List, Search |
+| Settings Trackers | List |
+| Library Folders | List |
+| Library Folder Content | List |
+| Coaching | List |
+| Stats Activity Scorecards | List, Search |
 
 ## Authentication
 
-Auth class: `GongAuthConfig`
+For all authentication options, see the connector's [authentication documentation](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/gong/AUTH.md).
 
-Required fields:
+## API Reference
 
-- `access_key`
-- `access_key_secret`
+For the full API reference with parameters and examples, see the connector's [reference documentation](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/gong/REFERENCE.md).
 
 ---
 
-*[Full docs on GitHub](https://github.com/airbytehq/airbyte-ai-connectors/tree/main/connectors/gong)*
+*[Full docs on GitHub](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/connectors/gong)*
