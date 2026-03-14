@@ -13,8 +13,16 @@ servers:
   - url: https://www.reddit.com
     description: Reddit Public API (JSON endpoints)
 
+security:
+  - UserAgentAuth: []
+
 components:
-  securitySchemes: {}
+  securitySchemes:
+    UserAgentAuth:
+      type: apiKey
+      in: header
+      name: User-Agent
+      description: User-Agent string for Reddit API requests
 
   schemas:
     SubredditPost:

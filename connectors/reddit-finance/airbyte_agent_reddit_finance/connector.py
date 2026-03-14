@@ -179,14 +179,22 @@ class RedditFinanceConnector:
                 connector_definition_id=str(RedditFinanceConnectorModel.id),
             )
         else:
-            # Local mode: no auth required for Reddit public JSON API
+            # Local mode: Reddit public JSON API uses User-Agent header
+            # We use api_key auth type to inject the User-Agent string
             from ._vendored.connector_sdk.executor import LocalExecutor
+            from ._vendored.connector_sdk.secrets import SecretStr
 
             config_values = None
 
+            # Build auth secrets: map user_agent to api_key for the SDK
+            reddit_auth = auth_config if auth_config else RedditFinanceAuthConfig()
+            auth_secrets = {
+                "api_key": SecretStr(reddit_auth.user_agent),
+            }
+
             self._executor = LocalExecutor(
                 model=RedditFinanceConnectorModel,
-                auth_config=auth_config.model_dump() if auth_config else None,
+                secrets=auth_secrets,
                 config_values=config_values,
                 on_token_refresh=on_token_refresh,
             )

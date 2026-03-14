@@ -15,9 +15,18 @@ from typing import TypeVar, Generic, Union, Any
 # but we keep a stub config for consistency with the connector pattern
 
 class RedditFinanceAuthConfig(BaseModel):
-    """Authentication configuration for Reddit Finance (no auth required)."""
+    """Authentication configuration for Reddit Finance.
+
+    Reddit's public JSON API requires a User-Agent header but no API key.
+    The user_agent is injected as an api_key into the User-Agent header.
+    """
 
     model_config = ConfigDict(extra="forbid")
+
+    user_agent: str = Field(
+        default="AirbyteTradingBot/1.0 (by /u/airbyte_connector)",
+        description="User-Agent string for Reddit API requests",
+    )
 
 
 # ===== RESPONSE TYPE DEFINITIONS (PYDANTIC) =====
