@@ -197,7 +197,7 @@ Return types depend on the action:
 - **`list` / `api_search`** actions return a typed envelope:
   ```python
   # For Slack: SlackExecuteResultWithMeta (or similar per connector)
-  result.data   # Typed list of Pydantic models (e.g., list[Channel])
+  result.data   # List of dicts (use dict access like record['name'])
   result.meta   # Pagination metadata dict with keys like 'next_cursor', 'has_more'
   ```
 
@@ -242,7 +242,7 @@ except RuntimeError as e:
 | `create` | `dict` | Created record |
 | `update` | `dict` | Updated record |
 | `delete` | `dict` | Deletion confirmation |
-| `api_search` | Envelope with `.data` and `.meta` | `.data` is a typed list |
+| `api_search` | Envelope with `.data` and `.meta` | `.data` is a list of dicts |
 | `download` | `AsyncIterator[bytes]` | Stream for file content |
 
 ## Pagination
