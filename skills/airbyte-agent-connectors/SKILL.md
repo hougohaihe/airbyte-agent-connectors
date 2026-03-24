@@ -141,8 +141,8 @@ All connectors use the same interface:
 
 ```python
 result = await connector.execute(entity, action, params)
-# For list actions: returns an envelope with result.data (typed list) and result.meta (pagination)
-# For get/create/update actions: returns the Pydantic model directly (e.g., Channel, User)
+# For list actions: returns an envelope with result.data (list) and result.meta (pagination dict)
+# For get/create/update actions: returns a raw dict (use dict access like result['name'])
 # Raises RuntimeError on failure — no need to check result.success
 ```
 
@@ -150,11 +150,11 @@ result = await connector.execute(entity, action, params)
 
 | Action | Description | Return Type |
 |--------|-------------|-------------------|
-| `list` | Get multiple records | Envelope with `.data` (typed list) and `.meta` (pagination) |
-| `get` | Get single record by ID | Pydantic model (e.g., `User`, `Channel`) |
-| `create` | Create new record | Pydantic model |
-| `update` | Modify existing record | Pydantic model |
-| `delete` | Remove record | Pydantic model |
+| `list` | Get multiple records | Envelope with `.data` (list) and `.meta` (pagination dict) |
+| `get` | Get single record by ID | `dict` (raw API response) |
+| `create` | Create new record | `dict` |
+| `update` | Modify existing record | `dict` |
+| `delete` | Remove record | `dict` |
 | `api_search` | Native API search syntax | Envelope with `.data` and `.meta` |
 
 ### Quick Examples

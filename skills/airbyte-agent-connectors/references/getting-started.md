@@ -251,8 +251,8 @@ async def get_repository(owner: str, repo: str) -> str:
         "owner": owner,
         "repo": repo
     })
-    # get actions return the Pydantic model directly
-    return str(result)
+    # get actions return a raw dict
+    return json.dumps(result, default=str)
 
 async def main():
     print("GitHub Agent Ready! Ask questions about repositories.")

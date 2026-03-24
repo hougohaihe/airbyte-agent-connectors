@@ -201,12 +201,13 @@ Return types depend on the action:
   result.meta   # Pagination metadata dict with keys like 'next_cursor', 'has_more'
   ```
 
-- **`get` / `create` / `update` / `delete`** actions return the Pydantic model directly:
+- **`get` / `create` / `update` / `delete`** actions return a raw `dict`:
   ```python
-  # Returns e.g. User, Channel, CreatedMessage — not an envelope
+  # Returns a dict (raw API response), not a Pydantic model
   user = await connector.execute("users", "get", {"user": "U123"})
-  print(user.name)  # Access typed attributes directly
+  print(user['name'])  # Use dict access, not attribute access
   ```
+  > **Note:** The typed query methods (e.g., `connector.users.get()`) return Pydantic models, but the generic `execute()` method returns raw dicts for non-list actions.
 
 - **Errors** are raised as exceptions (`RuntimeError`, `TypeError`, `ValueError`, `NotImplementedError`). There is no `.success` or `.error` attribute on the result — if the call returns, it succeeded.
 
@@ -224,10 +225,10 @@ if hasattr(result, 'meta') and result.meta:
     if next_cursor:
         print(f"More results available, cursor: {next_cursor}")
 
-# Get action — returns the model directly
+# Get action — returns a raw dict
 try:
     user = await connector.execute("users", "get", {"user": "U123"})
-    print(user.name)
+    print(user['name'])  # dict access, not attribute access
 except RuntimeError as e:
     print(f"Operation failed: {e}")
 ```
@@ -236,11 +237,11 @@ except RuntimeError as e:
 
 | Action | Return Type | Notes |
 |--------|-------------------|-------|
-| `get` | Pydantic model | Single record (e.g., `User`, `Channel`) |
-| `list` | Envelope with `.data` and `.meta` | `.data` is a typed list, `.meta` has pagination |
-| `create` | Pydantic model | Created record |
-| `update` | Pydantic model | Updated record |
-| `delete` | Pydantic model | Deletion confirmation |
+| `get` | `dict` | Single record (raw API response) |
+| `list` | Envelope with `.data` and `.meta` | `.data` is a list, `.meta` is a pagination dict |
+| `create` | `dict` | Created record |
+| `update` | `dict` | Updated record |
+| `delete` | `dict` | Deletion confirmation |
 | `api_search` | Envelope with `.data` and `.meta` | `.data` is a typed list |
 | `download` | `AsyncIterator[bytes]` | Stream for file content |
 
@@ -333,8 +334,8 @@ async def safe_execute(entity: str, action: str, params: dict | None = None) -> 
         # For list actions, result has .data and .meta
         if hasattr(result, 'data'):
             return json.dumps(result.data, default=str)
-        # For get/create/update, result is the model directly
-        return str(result)
+        # For get/create/update, result is a raw dict
+        return json.dumps(result, default=str)
     except (RuntimeError, TypeError, ValueError) as e:
         return f"Error: {e}"
 ```
@@ -387,10 +388,10 @@ async def execute(entity: str, action: str, params: dict | None = None) -> str:
         JSON string of the result
     """
     result = await connector.execute(entity, action, params or {})
-    # For list actions, result has .data; for get/create/update, result is the model
+    # For list actions, result has .data; for get/create/update, result is a raw dict
     if hasattr(result, 'data'):
         return json.dumps(result.data, default=str)
-    return str(result)
+    return json.dumps(result, default=str)
 ```
 
 ### Entity-Specific Tools
@@ -411,7 +412,7 @@ async def list_customers(limit: int = 10, email_filter: str | None = None) -> st
 async def get_customer(customer_id: str) -> str:
     """Get a specific Stripe customer by ID."""
     result = await connector.execute("customers", "get", {"id": customer_id})
-    return str(result)
+    return json.dumps(result, default=str)  # result is a dict
 ```
 
 ### Framework Quick Start
