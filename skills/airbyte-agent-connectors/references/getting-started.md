@@ -197,6 +197,7 @@ Create `agent.py`:
 
 ```python
 import asyncio
+import json
 import os
 from dotenv import load_dotenv
 from pydantic_ai import Agent

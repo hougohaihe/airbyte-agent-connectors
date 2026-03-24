@@ -418,7 +418,7 @@ print(f"Data: {result.data}")
 if hasattr(result, 'meta'):
     print(f"Meta: {result.meta}")
 
-# For get actions — returns the Pydantic model directly
+# For get actions — returns a raw dict (not a Pydantic model)
 user = await connector.execute("users", "get", {"user": "U123"})
 print(f"Type: {type(user)}")
 print(f"User: {user}")
