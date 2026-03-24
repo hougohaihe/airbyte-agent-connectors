@@ -28,7 +28,7 @@ from uuid import (
 FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('e7778cfc-e97c-4458-9ecb-b4f2bba8946c'),
     name='facebook-marketing',
-    version='1.0.20',
+    version='1.0.21',
     base_url='https://graph.facebook.com/v24.0',
     auth=AuthConfig(
         options=[
@@ -140,7 +140,7 @@ FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
         ),
         EntityDefinition(
             name='ad_accounts',
-            stream_name='ad_accounts',
+            stream_name='ad_account',
             actions=[Action.LIST],
             endpoints={
                 Action.LIST: EndpointDefinition(
@@ -249,7 +249,7 @@ FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
                                     },
                                     'required': ['id'],
                                     'x-airbyte-entity-name': 'ad_accounts',
-                                    'x-airbyte-stream-name': 'ad_accounts',
+                                    'x-airbyte-stream-name': 'ad_account',
                                 },
                             },
                             'paging': {
@@ -352,7 +352,7 @@ FacebookMarketingConnectorModel: ConnectorModel = ConnectorModel(
                 },
                 'required': ['id'],
                 'x-airbyte-entity-name': 'ad_accounts',
-                'x-airbyte-stream-name': 'ad_accounts',
+                'x-airbyte-stream-name': 'ad_account',
             },
         ),
         EntityDefinition(
