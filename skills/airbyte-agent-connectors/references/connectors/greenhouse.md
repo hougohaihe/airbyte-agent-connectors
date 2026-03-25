@@ -1,5 +1,5 @@
 <!-- AUTO-GENERATED from connectors/greenhouse/ -- do not edit manually -->
-<!-- Source format: v1 | Generated: 2026-03-24 -->
+<!-- Source format: v1 | Generated: 2026-03-25 -->
 
 # Greenhouse
 
@@ -7,7 +7,7 @@ The Greenhouse agent connector is a Python package that equips AI agents to inte
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-greenhouse` v0.17.114
+- **Package:** `airbyte-agent-greenhouse` v0.17.115
 - **Auth:** Token
 - **Docs:** [Official API docs](https://developers.greenhouse.io/harvest.html)
 - **Status:** complete

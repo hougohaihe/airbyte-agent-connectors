@@ -1,5 +1,5 @@
 <!-- AUTO-GENERATED from connectors/twilio/ -- do not edit manually -->
-<!-- Source format: v1 | Generated: 2026-03-24 -->
+<!-- Source format: v1 | Generated: 2026-03-25 -->
 
 # Twilio
 
@@ -7,7 +7,7 @@ The Twilio agent connector is a Python package that equips AI agents to interact
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-twilio` v0.1.5
+- **Package:** `airbyte-agent-twilio` v0.1.6
 - **Auth:** Token
 - **Docs:** [Official API docs](https://www.twilio.com/docs/usage/api)
 - **Status:** complete

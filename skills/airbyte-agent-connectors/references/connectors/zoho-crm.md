@@ -1,5 +1,5 @@
 <!-- AUTO-GENERATED from connectors/zoho-crm/ -- do not edit manually -->
-<!-- Source format: v1 | Generated: 2026-03-24 -->
+<!-- Source format: v1 | Generated: 2026-03-25 -->
 
 # Zoho Crm
 
@@ -7,7 +7,7 @@ The Zoho-Crm agent connector is a Python package that equips AI agents to intera
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-zoho-crm` v0.1.3
+- **Package:** `airbyte-agent-zoho-crm` v0.1.4
 - **Auth:** OAuth
 - **Docs:** [Official API docs](https://www.zoho.com/crm/developer/docs/api/v2/)
 - **Status:** complete

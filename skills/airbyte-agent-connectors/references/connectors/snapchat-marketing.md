@@ -1,5 +1,5 @@
 <!-- AUTO-GENERATED from connectors/snapchat-marketing/ -- do not edit manually -->
-<!-- Source format: v1 | Generated: 2026-03-24 -->
+<!-- Source format: v1 | Generated: 2026-03-25 -->
 
 # Snapchat Marketing
 
@@ -7,7 +7,7 @@ The Snapchat-Marketing agent connector is a Python package that equips AI agents
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-snapchat-marketing` v0.1.4
+- **Package:** `airbyte-agent-snapchat-marketing` v0.1.5
 - **Auth:** Token
 - **Docs:** [Official API docs](https://developers.snap.com/api/marketing-api/Ads-API/introduction)
 - **Status:** complete

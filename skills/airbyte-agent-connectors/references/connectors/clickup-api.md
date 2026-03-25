@@ -1,5 +1,5 @@
 <!-- AUTO-GENERATED from connectors/clickup-api/ -- do not edit manually -->
-<!-- Source format: v1 | Generated: 2026-03-24 -->
+<!-- Source format: v1 | Generated: 2026-03-25 -->
 
 # Clickup Api
 
@@ -7,7 +7,7 @@ The Clickup-Api agent connector is a Python package that equips AI agents to int
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-clickup-api` v0.1.5
+- **Package:** `airbyte-agent-clickup-api` v0.1.6
 - **Auth:** Token
 - **Docs:** [Official API docs](https://developer.clickup.com/reference)
 - **Status:** complete
