@@ -401,6 +401,8 @@ async def execute(entity: str, action: str, params: dict | None = None) -> str:
 
 ### Entity-Specific Tools
 
+> **When to use:** Prefer the generic execute tool (above) with `@Connector.tool_utils` by default — it gives the agent full access to all entities and actions through a single tool. Only create entity-specific tools if the user explicitly wants to limit what the agent can do (e.g., read-only access, or restricting to a few entities). Note that entity-specific tools don't use the `@Connector.tool_utils` decorator since that generates a docstring describing *all* entities/actions, which would be misleading on a tool that only does one thing.
+
 Each connector exposes typed query classes as attributes (e.g., `connector.customers`, `connector.issues`). These provide strongly typed methods with documented parameters and return types, so you can create focused tools without dealing with raw entity/action strings:
 
 ```python
