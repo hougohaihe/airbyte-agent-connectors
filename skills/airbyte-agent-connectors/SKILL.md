@@ -29,7 +29,7 @@ Airbyte Agent Connectors let AI agents call third-party APIs through strongly ty
 Use when:
 - Environment has `AIRBYTE_CLIENT_ID` + `AIRBYTE_CLIENT_SECRET`
 - User wants connectors visible in the Airbyte UI at app.airbyte.ai
-- User needs managed credential storage, entity cache, or multi-tenant deployments
+- User needs managed credential storage, context store, or multi-tenant deployments
 
 ### OSS Mode (Open Source / Local SDK)
 Use when:

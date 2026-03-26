@@ -12,7 +12,7 @@ This guide covers setting up connectors through the Airbyte Platform (app.airbyt
 - [Making Connectors Visible in the UI](#making-connectors-visible-in-the-ui)
 - [Creating Connector Instances](#creating-connector-instances)
 - [Verifying Connector in UI](#verifying-connector-in-ui)
-- [Entity Cache](#entity-cache)
+- [Context Store](#context-store)
 - [Environment Variables Setup](#environment-variables-setup)
 - [Troubleshooting Platform Setup](#troubleshooting-platform-setup)
 - [Complete Setup Checklist](#complete-setup-checklist)
@@ -23,7 +23,7 @@ This guide covers setting up connectors through the Airbyte Platform (app.airbyt
 Use Platform Mode when you want:
 - Connectors visible in the Airbyte UI
 - Managed credential storage and rotation
-- Entity cache for faster repeated queries
+- Context store for faster repeated queries
 - Multi-tenant SaaS deployments
 - OAuth flows handled server-side
 
@@ -312,18 +312,18 @@ After registering the template:
 3. Your connector should appear with the name you specified and a "Direct" badge
 4. Click to view status, configuration, and usage
 
-## Entity Cache
+## Context Store
 
-Platform connectors support entity caching for faster repeated queries. Entity cache is managed through the Airbyte UI:
+Platform connectors support a context store for faster repeated queries. The context store is managed through the Airbyte UI:
 
 1. Go to [app.airbyte.ai](https://app.airbyte.ai)
 2. Select your connector
-3. Enable entity cache in the connector settings
+3. Enable the context store in the connector settings
 
-When entity cache is enabled:
+When the context store is enabled:
 - Common queries are cached and served faster
-- Cache syncs automatically in the background
-- View cache status in the Airbyte UI
+- Data syncs automatically in the background
+- View context store status in the Airbyte UI
 
 ## Environment Variables Setup
 
