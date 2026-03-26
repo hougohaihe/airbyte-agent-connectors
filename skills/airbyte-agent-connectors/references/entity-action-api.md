@@ -373,7 +373,7 @@ except NotImplementedError:
 
 ### Generic Tool Pattern
 
-Create a single tool that handles any entity/action combination:
+Create a single tool that handles any entity/action combination. The `@Connector.tool_utils` decorator auto-generates the tool's docstring from the connector schema (entities, actions, parameters, and usage guidelines). Pass `enable_hosted_mode_features=False` in OSS mode to exclude [context store](https://docs.airbyte.com/ai-agents/platform/context-store) search actions that are only available in Platform Mode. Omit it (or pass `True`) in Platform Mode to include search actions and guidance to prefer cached search over direct API calls.
 
 ```python
 @agent.tool_plain

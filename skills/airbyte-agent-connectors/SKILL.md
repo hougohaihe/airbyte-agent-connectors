@@ -159,6 +159,16 @@ result = await connector.execute(entity, action, params)
 >         return f"Error: {type(e).__name__}: {e}"
 > ```
 
+> **`tool_utils` and `enable_hosted_mode_features`:** The `@Connector.tool_utils` decorator auto-generates the tool's docstring from the connector schema, including available entities, actions, parameters, and usage guidelines. In **Platform Mode** (default), the docstring includes `search` actions that query the [context store](https://docs.airbyte.com/ai-agents/platform/context-store) and guidance to prefer cached search over direct API calls. In **OSS Mode**, pass `enable_hosted_mode_features=False` to exclude these — the context store is not available locally, so advertising search actions would cause errors:
+>
+> ```python
+> # OSS Mode — excludes context store search actions from the tool docstring
+> @Connector.tool_utils(enable_hosted_mode_features=False)
+>
+> # Platform Mode (default) — includes search actions and context store guidance
+> @Connector.tool_utils
+> ```
+
 ### Actions
 
 | Action | Description | `result.data` Type |
