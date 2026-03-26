@@ -177,11 +177,9 @@ async def main():
         "per_page": 5
     })
 
-    if result.success:
-        for repo in result.data:
-            print(f"- {repo['name']}: {repo.get('description', 'No description')}")
-    else:
-        print(f"Error: {result.error}")
+    # list actions return an envelope with .data and .meta
+    for repo in result.data:
+        print(f"- {repo['name']}: {repo.get('description', 'No description')}")
 
 if __name__ == "__main__":
     asyncio.run(main())
@@ -199,6 +197,7 @@ Create `agent.py`:
 
 ```python
 import asyncio
+import json
 import os
 from dotenv import load_dotenv
 from pydantic_ai import Agent
@@ -233,7 +232,7 @@ async def list_issues(owner: str, repo: str, limit: int = 10) -> str:
         "states": ["OPEN"],
         "per_page": limit
     })
-    return str(result.data) if result.success else f"Error: {result.error}"
+    return str(result.data)
 
 @agent.tool_plain
 async def list_pull_requests(owner: str, repo: str, limit: int = 10) -> str:
@@ -244,7 +243,7 @@ async def list_pull_requests(owner: str, repo: str, limit: int = 10) -> str:
         "states": ["OPEN"],
         "per_page": limit
     })
-    return str(result.data) if result.success else f"Error: {result.error}"
+    return str(result.data)
 
 @agent.tool_plain
 async def get_repository(owner: str, repo: str) -> str:
@@ -253,7 +252,8 @@ async def get_repository(owner: str, repo: str) -> str:
         "owner": owner,
         "repo": repo
     })
-    return str(result.data) if result.success else f"Error: {result.error}"
+    # get actions return a raw dict
+    return json.dumps(result, default=str)
 
 async def main():
     print("GitHub Agent Ready! Ask questions about repositories.")
@@ -328,17 +328,17 @@ await connector.execute("customers", "api_search", {
 
 ```python
 from airbyte_agent_slack import SlackConnector
-from airbyte_agent_slack.models import SlackAuthConfig
+from airbyte_agent_slack.models import SlackTokenAuthenticationAuthConfig
 
 connector = SlackConnector(
-    auth_config=SlackAuthConfig(token=os.environ["SLACK_BOT_TOKEN"])
+    auth_config=SlackTokenAuthenticationAuthConfig(api_token=os.environ["SLACK_BOT_TOKEN"])
 )
 
-# List channels
-await connector.execute("channels", "list", {})
+# List channels — returns envelope with .data (list) and .meta (pagination)
+result = await connector.execute("channels", "list", {})
 
 # List messages in channel
-await connector.execute("messages", "list", {"channel": "C01234567"})
+result = await connector.execute("channel_messages", "list", {"channel": "C01234567"})
 ```
 
 ### HubSpot
