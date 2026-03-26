@@ -7,7 +7,7 @@ The Linear agent connector is a Python package that equips AI agents to interact
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-linear` v0.19.120
+- **Package:** `airbyte-agent-linear` v0.19.121
 - **Auth:** Token
 - **Docs:** [Official API docs](https://linear.app/developers/graphql)
 - **Status:** complete
@@ -27,6 +27,9 @@ The Linear agent connector is a Python package that equips AI agents to interact
 - Assign a recent issue to a teammate
 - Unassign the current assignee from a recent issue
 - Reassign a recent issue from one teammate to another
+- Create a new issue in the 'Backend Improvements' project
+- Add a recent issue to a specific project
+- Move an issue to a different project
 - Analyze the workload distribution across my development team
 - What are the top priority issues in our current sprint?
 - Identify the most active projects in our organization right now

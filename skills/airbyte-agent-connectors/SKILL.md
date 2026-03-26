@@ -141,21 +141,20 @@ All connectors use the same interface:
 
 ```python
 result = await connector.execute(entity, action, params)
-# For list actions: returns an envelope with result.data (list) and result.meta (pagination dict)
-# For get/create/update actions: returns a raw dict (use dict access like result['name'])
-# Raises RuntimeError on failure — no need to check result.success
+# result.data contains the records (list or dict depending on action)
+# result.meta contains pagination info for list operations
 ```
 
 ### Actions
 
-| Action | Description | Return Type |
+| Action | Description | `result.data` Type |
 |--------|-------------|-------------------|
-| `list` | Get multiple records | Envelope with `.data` (list) and `.meta` (pagination dict) |
-| `get` | Get single record by ID | `dict` (raw API response) |
+| `list` | Get multiple records | `list[dict]` |
+| `get` | Get single record by ID | `dict` |
 | `create` | Create new record | `dict` |
 | `update` | Modify existing record | `dict` |
 | `delete` | Remove record | `dict` |
-| `api_search` | Native API search syntax | Envelope with `.data` and `.meta` |
+| `api_search` | Native API search syntax | `list[dict]` |
 
 ### Quick Examples
 
@@ -174,23 +173,23 @@ await connector.execute("repositories", "api_search", {
 
 ### Pagination
 
-> **Pagination is connector-specific.** The cursor parameter name and meta field names vary by connector. To find the correct names for your connector, check its `REFERENCE.md` file at `connectors/{name}/REFERENCE.md` — each list action documents the cursor parameter and meta fields in its Parameters and Meta tables. See also the [pagination table](references/entity-action-api.md#pagination-parameters-by-connector) for a quick summary. Common examples: Slack uses `cursor` param / `next_cursor` meta, Stripe uses `starting_after` / `next_cursor`, GitHub uses `after` / `end_cursor`.
-
 ```python
-# Example for Slack (cursor param = "cursor", meta key = "next_cursor")
-async def fetch_all_slack(connector, entity, params=None):
+async def fetch_all(connector, entity, params=None):
     all_records = []
     cursor = None
     params = params or {}
 
     while True:
         if cursor:
-            params["cursor"] = cursor  # Slack-specific; Stripe uses "starting_after", GitHub uses "after"
+            params["after"] = cursor
         result = await connector.execute(entity, "list", params)
         all_records.extend(result.data)
 
-        cursor = result.meta.get('next_cursor') if hasattr(result, 'meta') and result.meta else None  # dict access, not attribute
-        if not cursor:
+        if result.meta and hasattr(result.meta, 'pagination'):
+            cursor = getattr(result.meta.pagination, 'cursor', None)
+            if not cursor:
+                break
+        else:
             break
 
     return all_records
@@ -226,8 +225,8 @@ from airbyte_agent_github.models import GithubPersonalAccessTokenAuthConfig
 auth_config=GithubPersonalAccessTokenAuthConfig(token="ghp_...")
 
 # Slack
-from airbyte_agent_slack.models import SlackTokenAuthenticationAuthConfig
-auth_config=SlackTokenAuthenticationAuthConfig(api_token="xoxb-...")
+from airbyte_agent_slack.models import SlackAuthConfig
+auth_config=SlackAuthConfig(token="xoxb-...")
 ```
 
 ### OAuth (requires refresh token)
