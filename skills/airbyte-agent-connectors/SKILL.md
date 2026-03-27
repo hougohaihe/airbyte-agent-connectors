@@ -29,9 +29,7 @@ Airbyte Agent Connectors let AI agents call third-party APIs through strongly ty
 Use when:
 - Environment has `AIRBYTE_CLIENT_ID` + `AIRBYTE_CLIENT_SECRET`
 - User wants connectors visible in the Airbyte UI at app.airbyte.ai
-- User needs managed credential storage, context store, or multi-tenant deployments
-
-> See [Agent Engine Platform docs](https://docs.airbyte.com/ai-agents/platform) and the [hosted quickstart tutorial](https://docs.airbyte.com/ai-agents/tutorials/quickstarts/tutorial-hosted) for full details.
+- User needs managed credential storage, entity cache, or multi-tenant deployments
 
 ### OSS Mode (Open Source / Local SDK)
 Use when:
@@ -143,31 +141,9 @@ All connectors use the same interface:
 
 ```python
 result = await connector.execute(entity, action, params)
-# For list actions: returns an envelope with result.data (list) and result.meta (pagination dict)
-# For get/create/update actions: returns a raw dict (use dict access like result['name'])
-# Raises exceptions on failure (RuntimeError, TypeError, ValueError, etc.)
+# result.data contains the records (list or dict depending on action)
+# result.meta contains pagination info for list operations
 ```
-
-> **Important: Error handling in agent tools.** When registering `execute()` as a tool for an AI agent (PydanticAI, LangChain, etc.), **always wrap the call in try/except** and return the error message as a string. This prevents unhandled exceptions from crashing the agent and lets the LLM recover gracefully:
->
-> ```python
-> @agent.tool_plain
-> async def execute(entity: str, action: str, params: dict | None = None) -> str:
->     try:
->         return await connector.execute(entity, action, params or {})
->     except Exception as e:
->         return f"Error: {type(e).__name__}: {e}"
-> ```
-
-> **`tool_utils` and `enable_hosted_mode_features`:** The `@Connector.tool_utils` decorator auto-generates the tool's docstring from the connector schema, including available entities, actions, parameters, and usage guidelines. In **Platform Mode** (default), the docstring includes `search` actions that query the [context store](https://docs.airbyte.com/ai-agents/platform/context-store) and guidance to prefer cached search over direct API calls. In **OSS Mode**, pass `enable_hosted_mode_features=False` to exclude these — the context store is not available locally, so advertising search actions would cause errors:
->
-> ```python
-> # OSS Mode — excludes context store search actions from the tool docstring
-> @Connector.tool_utils(enable_hosted_mode_features=False)
->
-> # Platform Mode (default) — includes search actions and context store guidance
-> @Connector.tool_utils
-> ```
 
 ### Actions
 
@@ -238,13 +214,7 @@ auth_config=GongAccessKeyAuthenticationAuthConfig(
 
 # HubSpot (Private App)
 from airbyte_agent_hubspot.models import HubspotPrivateAppAuthConfig
-auth_config=HubspotPrivateAppAuthConfig(private_app_token="pat-na1-...")
-
-# HubSpot (OAuth)
-from airbyte_agent_hubspot.models import HubspotOauth2AuthConfig
-auth_config=HubspotOauth2AuthConfig(
-    client_id="...", client_secret="...", refresh_token="..."
-)
+auth_config=HubspotPrivateAppAuthConfig(access_token="pat-na1-...")
 ```
 
 ### Personal Access Token
@@ -301,14 +271,6 @@ Each per-connector reference includes: package name and version, authentication 
 | Programmatic Setup | [references/programmatic-setup.md](references/programmatic-setup.md) |
 | MCP Integration | [references/mcp-integration.md](references/mcp-integration.md) |
 | Troubleshooting | [references/troubleshooting.md](references/troubleshooting.md) |
-
-### External Documentation
-
-| Topic | Link |
-|-------|------|
-| Agent Engine Platform | [docs.airbyte.com/ai-agents/platform](https://docs.airbyte.com/ai-agents/platform) |
-| Context Store | [docs.airbyte.com/ai-agents/platform/context-store](https://docs.airbyte.com/ai-agents/platform/context-store) |
-| Hosted Quickstart | [docs.airbyte.com/ai-agents/tutorials/quickstarts/tutorial-hosted](https://docs.airbyte.com/ai-agents/tutorials/quickstarts/tutorial-hosted) |
 
 ## How References Are Generated
 

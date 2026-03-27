@@ -1,5 +1,5 @@
 <!-- AUTO-GENERATED from connectors/google-ads/ -- do not edit manually -->
-<!-- Source format: v1 | Generated: 2026-03-26 -->
+<!-- Source format: v1 | Generated: 2026-03-27 -->
 
 # Google Ads
 
@@ -63,12 +63,9 @@ connector = GoogleAdsConnector(
 )
 
 @agent.tool_plain # assumes you're using Pydantic AI
-@GoogleAdsConnector.tool_utils(enable_hosted_mode_features=False)
+@GoogleAdsConnector.tool_utils
 async def google_ads_execute(entity: str, action: str, params: dict | None = None):
-    try:
-        return await connector.execute(entity, action, params or {})
-    except Exception as e:
-        return f"Error: {type(e).__name__}: {e}"
+    return await connector.execute(entity, action, params or {})
 ```
 
 ### Hosted Mode
@@ -88,10 +85,7 @@ connector = GoogleAdsConnector(
 @agent.tool_plain # assumes you're using Pydantic AI
 @GoogleAdsConnector.tool_utils
 async def google_ads_execute(entity: str, action: str, params: dict | None = None):
-    try:
-        return await connector.execute(entity, action, params or {})
-    except Exception as e:
-        return f"Error: {type(e).__name__}: {e}"
+    return await connector.execute(entity, action, params or {})
 ```
 
 ## Entities and Actions

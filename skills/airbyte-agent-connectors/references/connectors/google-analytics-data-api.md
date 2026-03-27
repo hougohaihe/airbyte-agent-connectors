@@ -1,5 +1,5 @@
 <!-- AUTO-GENERATED from connectors/google-analytics-data-api/ -- do not edit manually -->
-<!-- Source format: v1 | Generated: 2026-03-26 -->
+<!-- Source format: v1 | Generated: 2026-03-27 -->
 
 # Google Analytics Data API
 
@@ -7,7 +7,7 @@ The Google-Analytics-Data-Api agent connector is a Python package that equips AI
 
 **Key metadata:**
 
-- **Package:** `airbyte-agent-google-analytics-data-api` v0.1.14
+- **Package:** `airbyte-agent-google-analytics-data-api` v0.1.15
 - **Auth:** OAuth
 - **Docs:** [Official API docs](https://developers.google.com/analytics/devguides/reporting/data/v1/rest)
 - **Status:** complete
@@ -59,12 +59,9 @@ connector = GoogleAnalyticsDataApiConnector(
 )
 
 @agent.tool_plain # assumes you're using Pydantic AI
-@GoogleAnalyticsDataApiConnector.tool_utils(enable_hosted_mode_features=False)
+@GoogleAnalyticsDataApiConnector.tool_utils
 async def google_analytics_data_api_execute(entity: str, action: str, params: dict | None = None):
-    try:
-        return await connector.execute(entity, action, params or {})
-    except Exception as e:
-        return f"Error: {type(e).__name__}: {e}"
+    return await connector.execute(entity, action, params or {})
 ```
 
 ### Hosted Mode
@@ -84,10 +81,7 @@ connector = GoogleAnalyticsDataApiConnector(
 @agent.tool_plain # assumes you're using Pydantic AI
 @GoogleAnalyticsDataApiConnector.tool_utils
 async def google_analytics_data_api_execute(entity: str, action: str, params: dict | None = None):
-    try:
-        return await connector.execute(entity, action, params or {})
-    except Exception as e:
-        return f"Error: {type(e).__name__}: {e}"
+    return await connector.execute(entity, action, params or {})
 ```
 
 ## Entities and Actions

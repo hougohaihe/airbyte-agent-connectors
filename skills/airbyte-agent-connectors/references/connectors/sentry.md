@@ -1,5 +1,5 @@
 <!-- AUTO-GENERATED from connectors/sentry/ -- do not edit manually -->
-<!-- Source format: v1 | Generated: 2026-03-26 -->
+<!-- Source format: v1 | Generated: 2026-03-27 -->
 
 # Sentry
 
@@ -52,12 +52,9 @@ connector = SentryConnector(
 )
 
 @agent.tool_plain # assumes you're using Pydantic AI
-@SentryConnector.tool_utils(enable_hosted_mode_features=False)
+@SentryConnector.tool_utils
 async def sentry_execute(entity: str, action: str, params: dict | None = None):
-    try:
-        return await connector.execute(entity, action, params or {})
-    except Exception as e:
-        return f"Error: {type(e).__name__}: {e}"
+    return await connector.execute(entity, action, params or {})
 ```
 
 ### Hosted Mode
@@ -77,10 +74,7 @@ connector = SentryConnector(
 @agent.tool_plain # assumes you're using Pydantic AI
 @SentryConnector.tool_utils
 async def sentry_execute(entity: str, action: str, params: dict | None = None):
-    try:
-        return await connector.execute(entity, action, params or {})
-    except Exception as e:
-        return f"Error: {type(e).__name__}: {e}"
+    return await connector.execute(entity, action, params or {})
 ```
 
 ## Entities and Actions

@@ -1,5 +1,5 @@
 <!-- AUTO-GENERATED from connectors/linear/ -- do not edit manually -->
-<!-- Source format: v1 | Generated: 2026-03-26 -->
+<!-- Source format: v1 | Generated: 2026-03-27 -->
 
 # Linear
 
@@ -66,12 +66,9 @@ connector = LinearConnector(
 )
 
 @agent.tool_plain # assumes you're using Pydantic AI
-@LinearConnector.tool_utils(enable_hosted_mode_features=False)
+@LinearConnector.tool_utils
 async def linear_execute(entity: str, action: str, params: dict | None = None):
-    try:
-        return await connector.execute(entity, action, params or {})
-    except Exception as e:
-        return f"Error: {type(e).__name__}: {e}"
+    return await connector.execute(entity, action, params or {})
 ```
 
 ### Hosted Mode
@@ -91,10 +88,7 @@ connector = LinearConnector(
 @agent.tool_plain # assumes you're using Pydantic AI
 @LinearConnector.tool_utils
 async def linear_execute(entity: str, action: str, params: dict | None = None):
-    try:
-        return await connector.execute(entity, action, params or {})
-    except Exception as e:
-        return f"Error: {type(e).__name__}: {e}"
+    return await connector.execute(entity, action, params or {})
 ```
 
 ## Entities and Actions

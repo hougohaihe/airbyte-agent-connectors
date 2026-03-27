@@ -1,5 +1,5 @@
 <!-- AUTO-GENERATED from connectors/facebook-marketing/ -- do not edit manually -->
-<!-- Source format: v1 | Generated: 2026-03-26 -->
+<!-- Source format: v1 | Generated: 2026-03-27 -->
 
 # Facebook Marketing
 
@@ -67,12 +67,9 @@ connector = FacebookMarketingConnector(
 )
 
 @agent.tool_plain # assumes you're using Pydantic AI
-@FacebookMarketingConnector.tool_utils(enable_hosted_mode_features=False)
+@FacebookMarketingConnector.tool_utils
 async def facebook_marketing_execute(entity: str, action: str, params: dict | None = None):
-    try:
-        return await connector.execute(entity, action, params or {})
-    except Exception as e:
-        return f"Error: {type(e).__name__}: {e}"
+    return await connector.execute(entity, action, params or {})
 ```
 
 ### Hosted Mode
@@ -92,10 +89,7 @@ connector = FacebookMarketingConnector(
 @agent.tool_plain # assumes you're using Pydantic AI
 @FacebookMarketingConnector.tool_utils
 async def facebook_marketing_execute(entity: str, action: str, params: dict | None = None):
-    try:
-        return await connector.execute(entity, action, params or {})
-    except Exception as e:
-        return f"Error: {type(e).__name__}: {e}"
+    return await connector.execute(entity, action, params or {})
 ```
 
 ## Entities and Actions
