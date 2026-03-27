@@ -1,6 +1,6 @@
 # Airbyte Agent Connectors — Claude Code Skill
 
-> A Claude Code skill for setting up and operating 21 Airbyte Agent Connectors
+> A Claude Code skill for setting up and operating 51+ Airbyte Agent Connectors
 > through a unified entity-action interface.
 
 ## What This Skill Does
@@ -9,24 +9,13 @@ Once installed, Claude gains the knowledge to help you set up and use Airbyte Ag
 
 ## Install
 
-### Via plugin marketplace
-
-In Claude Code, run:
-```
-/plugin marketplace add airbytehq/airbyte-agent-connectors
-```
-Then install the plugin:
-```
-/plugin install airbyte-agent-connectors@airbyte-agent-connectors
-```
-
-### Manual
-
 ```bash
-mkdir -p .claude/skills
-git clone --depth 1 https://github.com/airbytehq/airbyte-agent-connectors.git /tmp/airbyte-skills
-cp -r /tmp/airbyte-skills/skills/airbyte-agent-connectors .claude/skills/
-rm -rf /tmp/airbyte-skills
+npx skills add airbytehq/airbyte-agent-connectors
+```
+
+Or in Claude Code:
+```
+/install airbytehq/airbyte-agent-connectors
 ```
 
 ## Try It
@@ -39,7 +28,9 @@ After installing, ask Claude:
 
 ## Supported Connectors
 
-Airtable, Amazon Ads, Asana, Facebook Marketing, GitHub, Gong, Google Drive, Greenhouse, HubSpot, Intercom, Jira, Klaviyo, Linear, Mailchimp, Orb, Salesforce, Shopify, Slack, Stripe, Zendesk Chat, Zendesk Support
+51+ connectors including Airtable, Amazon Ads, Asana, Chargebee, ClickUp, Confluence, Facebook Marketing, Freshdesk, GitHub, GitLab, Gmail, Gong, Google Ads, Google Analytics, Google Drive, Google Search Console, Granola, Greenhouse, Harvest, HubSpot, Incident.io, Intercom, Jira, Klaviyo, Linear, LinkedIn Ads, Mailchimp, Monday, Notion, Orb, PayPal, Pinterest, Pylon, Salesforce, Sendgrid, Sentry, Shopify, Slack, Snapchat Marketing, Stripe, TikTok Marketing, Twilio, Typeform, WooCommerce, Zendesk Chat, Zendesk Support, Zendesk Talk, Zoho CRM, and more.
+
+See the [connector index](references/connector-index.md) for the full list.
 
 ## Documentation
 
