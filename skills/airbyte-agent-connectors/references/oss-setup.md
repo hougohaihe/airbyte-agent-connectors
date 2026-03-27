@@ -131,7 +131,7 @@ from airbyte_agent_hubspot.models import HubspotPrivateAppAuthConfig
 
 connector = HubspotConnector(
     auth_config=HubspotPrivateAppAuthConfig(
-        access_token=os.environ["HUBSPOT_ACCESS_TOKEN"]
+        private_app_token=os.environ["HUBSPOT_PRIVATE_APP_TOKEN"]
     )
 )
 
@@ -147,10 +147,10 @@ For OAuth connectors in OSS Mode, you need to handle the OAuth flow yourself and
 
 ```python
 from airbyte_agent_salesforce import SalesforceConnector
-from airbyte_agent_salesforce.models import SalesforceOAuthConfig
+from airbyte_agent_salesforce.models import SalesforceAuthConfig
 
 connector = SalesforceConnector(
-    auth_config=SalesforceOAuthConfig(
+    auth_config=SalesforceAuthConfig(
         client_id=os.environ["SALESFORCE_CLIENT_ID"],
         client_secret=os.environ["SALESFORCE_CLIENT_SECRET"],
         refresh_token=os.environ["SALESFORCE_REFRESH_TOKEN"]
@@ -165,10 +165,10 @@ result = await connector.execute("accounts", "list", {"limit": 50})
 
 ```python
 from airbyte_agent_hubspot import HubspotConnector
-from airbyte_agent_hubspot.models import HubspotOAuthConfig
+from airbyte_agent_hubspot.models import HubspotOauth2AuthConfig
 
 connector = HubspotConnector(
-    auth_config=HubspotOAuthConfig(
+    auth_config=HubspotOauth2AuthConfig(
         client_id=os.environ["HUBSPOT_CLIENT_ID"],
         client_secret=os.environ["HUBSPOT_CLIENT_SECRET"],
         refresh_token=os.environ["HUBSPOT_REFRESH_TOKEN"]
@@ -195,7 +195,7 @@ GONG_ACCESS_KEY_SECRET=your_access_key_secret
 SLACK_BOT_TOKEN=xoxb-your-token
 
 # HubSpot (Private App Token)
-HUBSPOT_ACCESS_TOKEN=pat-na1-xxx
+HUBSPOT_PRIVATE_APP_TOKEN=pat-na1-xxx
 
 # Jira (API Token)
 JIRA_API_TOKEN=your_api_token
@@ -328,22 +328,28 @@ agent = Agent("openai:gpt-4o", system_prompt="You help with GitHub data.")
 @agent.tool_plain
 async def list_issues(owner: str, repo: str, limit: int = 10) -> str:
     """List open issues in a repository."""
-    result = await connector.execute("issues", "list", {
-        "owner": owner,
-        "repo": repo,
-        "states": ["OPEN"],
-        "per_page": limit
-    })
-    return str(result.data)
+    try:
+        result = await connector.execute("issues", "list", {
+            "owner": owner,
+            "repo": repo,
+            "states": ["OPEN"],
+            "per_page": limit
+        })
+        return str(result.data)
+    except Exception as e:
+        return f"Error: {type(e).__name__}: {e}"
 
 @agent.tool_plain
 async def get_repository(owner: str, repo: str) -> str:
     """Get repository details."""
-    result = await connector.execute("repositories", "get", {
-        "owner": owner,
-        "repo": repo
-    })
-    return str(result.data)
+    try:
+        result = await connector.execute("repositories", "get", {
+            "owner": owner,
+            "repo": repo
+        })
+        return str(result.data)
+    except Exception as e:
+        return f"Error: {type(e).__name__}: {e}"
 ```
 
 ### LangChain

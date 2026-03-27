@@ -64,37 +64,20 @@ We are actively expanding AI Connectors. Coming soon:
 We actively welcome feedback, ideas, and bug reports.
 If you're building AI agents with Airbyte Agent Connectors and want to share ideas or get help, join our community on [slack](https://slack.airbyte.com/). We'd love to hear what you're building and what connectors or capabilities you'd like to see next.
 
-## Claude Code Skills
+## Agent Skill
 
-This repo includes Claude Code skills:
+This repo includes an agent skill for setup and usage guidance:
 
-- [`airbyte-agent-connectors`](skills/airbyte-agent-connectors/SKILL.md): setup and usage guidance for Airbyte Agent Connectors
-- [`md2gdoc`](skills/md2gdoc/SKILL.md): convert markdown files to styled Google Docs with template fitting
-
-**Install via plugin marketplace:**
-
-In Claude Code, run:
-```
-/plugin marketplace add airbytehq/airbyte-agent-connectors
-```
-Then install the plugin:
-```
-/plugin install airbyte-agent-connectors@airbyte-agent-connectors
-/plugin install airbyte-agent-connectors@md2gdoc
-```
-
-**Or install manually:**
 ```bash
-mkdir -p .claude/skills
-git clone --depth 1 https://github.com/airbytehq/airbyte-agent-connectors.git /tmp/airbyte-skills
-cp -r /tmp/airbyte-skills/skills/airbyte-agent-connectors .claude/skills/
-cp -r /tmp/airbyte-skills/skills/md2gdoc .claude/skills/
-rm -rf /tmp/airbyte-skills
+npx skills add airbytehq/airbyte-agent-connectors
 ```
 
-Once installed, invoke either `/airbyte-agent-connectors` or `/md2gdoc` in Claude Code.
+Or in Claude Code:
+```
+/install airbytehq/airbyte-agent-connectors
+```
 
-See [airbyte-agent-connectors](skills/airbyte-agent-connectors/SKILL.md) and [md2gdoc](skills/md2gdoc/SKILL.md) for full usage details.
+See [`airbyte-agent-connectors`](skills/airbyte-agent-connectors/SKILL.md) for full usage details.
 
 ## Tutorial using the Python SDK
 

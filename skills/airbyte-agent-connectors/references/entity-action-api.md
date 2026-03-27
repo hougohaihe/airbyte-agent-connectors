@@ -373,11 +373,11 @@ except NotImplementedError:
 
 ### Generic Tool Pattern
 
-Create a single tool that handles any entity/action combination:
+Create a single tool that handles any entity/action combination. The `@Connector.tool_utils` decorator auto-generates the tool's docstring from the connector schema (entities, actions, parameters, and usage guidelines). Pass `enable_hosted_mode_features=False` in OSS mode to exclude [context store](https://docs.airbyte.com/ai-agents/platform/context-store) search actions that are only available in Platform Mode. Omit it (or pass `True`) in Platform Mode to include search actions and guidance to prefer cached search over direct API calls.
 
 ```python
 @agent.tool_plain
-@Connector.tool_utils
+@Connector.tool_utils(enable_hosted_mode_features=False)
 async def execute(entity: str, action: str, params: dict | None = None) -> str:
     """Execute an operation on the connector.
 
@@ -389,32 +389,40 @@ async def execute(entity: str, action: str, params: dict | None = None) -> str:
     Returns:
         JSON string of the result
     """
-    result = await connector.execute(entity, action, params or {})
-    # For list actions, result has .data; for get/create/update, result is a raw dict
-    if hasattr(result, 'data'):
-        return json.dumps(result.data, default=str)
-    return json.dumps(result, default=str)
+    try:
+        result = await connector.execute(entity, action, params or {})
+        # For list actions, result has .data; for get/create/update, result is a raw dict
+        if hasattr(result, 'data'):
+            return json.dumps(result.data, default=str)
+        return json.dumps(result, default=str)
+    except Exception as e:
+        return f"Error: {type(e).__name__}: {e}"
 ```
 
 ### Entity-Specific Tools
 
-Create focused tools for common operations:
+> **When to use:** Prefer the generic execute tool (above) with `@Connector.tool_utils` by default — it gives the agent full access to all entities and actions through a single tool. Only create entity-specific tools if the user explicitly wants to limit what the agent can do (e.g., read-only access, or restricting to a few entities). Note that entity-specific tools don't use the `@Connector.tool_utils` decorator since that generates a docstring describing *all* entities/actions, which would be misleading on a tool that only does one thing.
+
+Each connector exposes typed query classes as attributes (e.g., `connector.customers`, `connector.issues`). These provide strongly typed methods with documented parameters and return types, so you can create focused tools without dealing with raw entity/action strings:
 
 ```python
 @agent.tool_plain
-async def list_customers(limit: int = 10, email_filter: str | None = None) -> str:
-    """List Stripe customers."""
-    params = {"limit": limit}
-    if email_filter:
-        params["email"] = email_filter
-    result = await connector.execute("customers", "list", params)
-    return json.dumps(result.data, default=str)
+async def list_customers(limit: int = 10, email: str | None = None) -> str:
+    """List Stripe customers, optionally filtered by email."""
+    try:
+        result = await connector.customers.list(limit=limit, email=email)
+        return json.dumps(result.data, default=str)
+    except Exception as e:
+        return f"Error: {type(e).__name__}: {e}"
 
 @agent.tool_plain
 async def get_customer(customer_id: str) -> str:
     """Get a specific Stripe customer by ID."""
-    result = await connector.execute("customers", "get", {"id": customer_id})
-    return json.dumps(result, default=str)  # result is a dict
+    try:
+        result = await connector.customers.get(id=customer_id)
+        return json.dumps(result, default=str)
+    except Exception as e:
+        return f"Error: {type(e).__name__}: {e}"
 ```
 
 ### Framework Quick Start
@@ -428,7 +436,10 @@ agent = Agent("openai:gpt-4o", system_prompt="You help with GitHub data.")
 
 @agent.tool_plain
 async def github_execute(entity: str, action: str, params: dict | None = None):
-    return await connector.execute(entity, action, params or {})
+    try:
+        return await connector.execute(entity, action, params or {})
+    except Exception as e:
+        return f"Error: {type(e).__name__}: {e}"
 ```
 
 #### LangChain

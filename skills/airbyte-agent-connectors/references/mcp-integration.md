@@ -159,7 +159,7 @@ connectors:
     connector_name: hubspot
     description: "HubSpot CRM and marketing"
     secrets:
-      access_token: HUBSPOT_ACCESS_TOKEN
+      private_app_token: HUBSPOT_PRIVATE_APP_TOKEN
 
   # Slack - Bot Token
   - id: slack
@@ -187,7 +187,7 @@ SALESFORCE_CLIENT_SECRET=your_client_secret
 SALESFORCE_REFRESH_TOKEN=your_refresh_token
 
 # HubSpot
-HUBSPOT_ACCESS_TOKEN=pat-na1-xxx
+HUBSPOT_PRIVATE_APP_TOKEN=pat-na1-xxx
 
 # Slack
 SLACK_BOT_TOKEN=xoxb-your-token
