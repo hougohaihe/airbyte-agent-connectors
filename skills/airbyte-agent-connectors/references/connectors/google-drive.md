@@ -1,5 +1,5 @@
 <!-- AUTO-GENERATED from connectors/google-drive/ -- do not edit manually -->
-<!-- Source format: v1 | Generated: 2026-03-27 -->
+<!-- Source format: v1 | Generated: 2026-03-30 -->
 
 # Google Drive
 
