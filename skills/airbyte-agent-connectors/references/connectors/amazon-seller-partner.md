@@ -1,5 +1,5 @@
 <!-- AUTO-GENERATED from connectors/amazon-seller-partner/ -- do not edit manually -->
-<!-- Source format: v1 | Generated: 2026-03-31 -->
+<!-- Source format: v1 | Generated: 2026-04-01 -->
 
 # Amazon Seller Partner
 
