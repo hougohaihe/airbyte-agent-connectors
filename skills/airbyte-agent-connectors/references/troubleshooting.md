@@ -8,7 +8,6 @@ This guide covers common errors and solutions when working with Airbyte Agent Co
 - [Retry Configuration](#retry-configuration)
 - [OAuth Token Refresh Issues](#oauth-token-refresh-issues)
 - [Common Setup Mistakes](#common-setup-mistakes)
-- [MCP Server Issues](#mcp-server-issues)
 - [Debugging Tips](#debugging-tips)
 - [SDK Known Issues](#sdk-known-issues)
 - [Handling "Already Exists" Errors](#handling-already-exists-errors)
@@ -337,61 +336,6 @@ jitter_ratio: 0.1
    entities = connector.list_entities()
    print(entities)
    ```
-
-## MCP Server Issues
-
-### Server Not Starting
-
-**Symptoms:**
-- Claude shows "MCP server not available"
-- Connection refused errors
-
-**Solutions:**
-
-1. **Check uv/Python installation:**
-   ```bash
-   uv --version
-   python --version
-   which uv
-   ```
-
-2. **Test server manually:**
-   ```bash
-   cd /path/to/airbyte-agent-mcp
-   uv run airbyte_agent_mcp
-   ```
-
-3. **Verify configuration file paths:**
-   ```bash
-   ls -la /path/to/airbyte-agent-mcp/configured_connectors.yaml
-   ls -la /path/to/airbyte-agent-mcp/.env
-   ```
-
-### Connector Not Found in MCP
-
-**Symptoms:**
-- "Connector not found" errors
-- Connector missing from discovery
-
-**Solutions:**
-
-1. **Check configured_connectors.yaml:**
-   ```yaml
-   connectors:
-     - id: stripe  # This ID is used in execute calls
-       type: local
-       connector_name: stripe
-       secrets:
-         api_key: STRIPE_API_KEY
-   ```
-
-2. **Verify environment variables are set:**
-   ```bash
-   # Check .env has the required variables
-   cat /path/to/airbyte-agent-mcp/.env | grep STRIPE
-   ```
-
-3. **Restart MCP server after config changes**
 
 ## Debugging Tips
 

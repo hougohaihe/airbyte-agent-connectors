@@ -674,8 +674,7 @@ def test_generate_skill_md_has_operational_content():
     assert "**License:** Elastic-2.0" in result
     assert "**Compatibility:** Requires Python 3.11+" in result
     assert "**Repository:** https://github.com/airbytehq/airbyte-agent-connectors" in result
-    assert "**MCP Server:** airbyte-agent-mcp" in result
-    # Must have Reference Documentation table with all 8 links
+    # Must have Reference Documentation table
     assert "## Reference Documentation" in result
     assert "references/getting-started.md" in result
     assert "references/platform-setup.md" in result
@@ -683,7 +682,6 @@ def test_generate_skill_md_has_operational_content():
     assert "references/entity-action-api.md" in result
     assert "references/authentication.md" in result
     assert "references/programmatic-setup.md" in result
-    assert "references/mcp-integration.md" in result
     assert "references/troubleshooting.md" in result
 
 

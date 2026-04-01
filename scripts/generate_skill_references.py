@@ -784,7 +784,7 @@ description: |
   tools, HR, and communication platforms. Make sure to use this skill when the user wants
   to connect to any SaaS API, install an airbyte-agent connector package,
   integrate third-party service data into a Python application or AI agent, query or
-  search records from any supported service, or configure Airbyte MCP tools for Claude.
+  search records from any supported service.
   Covers Platform Mode (Airbyte Cloud) and OSS Mode (local Python SDK).
 ---
 
@@ -810,7 +810,7 @@ Use when:
 Use when:
 - User wants to run connectors directly without platform integration
 - User is doing quick development or prototyping
-- User wants Claude Code/Desktop integration via MCP only
+- User wants direct control over credentials and no cloud dependency
 
 > **Ask if unclear:** "Are you using Airbyte Platform (app.airbyte.ai) or open source connectors?"
 
@@ -896,12 +896,6 @@ result = await connector.execute("issues", "list", {{
     "states": ["OPEN"],
     "per_page": 10
 }})
-```
-
-### Add to Claude via MCP
-
-```bash
-claude mcp add airbyte-agent-mcp --scope project
 ```
 
 ---
@@ -1040,7 +1034,6 @@ Each per-connector reference includes: package name and version, authentication 
 | Entity-Action API | [references/entity-action-api.md](references/entity-action-api.md) |
 | Authentication | [references/authentication.md](references/authentication.md) |
 | Programmatic Setup | [references/programmatic-setup.md](references/programmatic-setup.md) |
-| MCP Integration | [references/mcp-integration.md](references/mcp-integration.md) |
 | Troubleshooting | [references/troubleshooting.md](references/troubleshooting.md) |
 
 ## How References Are Generated
@@ -1058,7 +1051,6 @@ references, or `--connector <name>` for a specific connector.
 - **License:** Elastic-2.0
 - **Compatibility:** Requires Python 3.11+. Recommends uv for package management.
 - **Repository:** https://github.com/airbytehq/airbyte-agent-connectors
-- **MCP Server:** airbyte-agent-mcp
 
 ## Support
 
