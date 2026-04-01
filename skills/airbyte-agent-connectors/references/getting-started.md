@@ -373,7 +373,6 @@ await connector.execute("deals", "list", {"limit": 50})
 
 - **[Entity-Action API](./entity-action-api.md)** - Understand the core API patterns
 - **[Authentication](./authentication.md)** - Deep dive into auth options
-- **[MCP Integration](./mcp-integration.md)** - Set up MCP server for Claude
 - **[Troubleshooting](./troubleshooting.md)** - Common issues and solutions
 
 ## Connector-Specific Documentation

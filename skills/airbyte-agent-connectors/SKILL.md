@@ -35,7 +35,7 @@ Use when:
 Use when:
 - User wants to run connectors directly without platform integration
 - User is doing quick development or prototyping
-- User wants Claude Code/Desktop integration via MCP only
+- User wants direct control over credentials and no cloud dependency
 
 > **Ask if unclear:** "Are you using Airbyte Platform (app.airbyte.ai) or open source connectors?"
 

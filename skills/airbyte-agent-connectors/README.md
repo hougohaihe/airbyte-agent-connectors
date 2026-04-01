@@ -5,7 +5,7 @@
 
 ## What This Skill Does
 
-Once installed, Claude gains the knowledge to help you set up and use Airbyte Agent Connectors in **Platform Mode** (Airbyte Cloud) or **OSS Mode** (local SDK). It covers authentication, the entity-action API, framework integration (PydanticAI, LangChain), and MCP configuration for Claude Desktop/Code.
+Once installed, Claude gains the knowledge to help you set up and use Airbyte Agent Connectors in **Platform Mode** (Airbyte Cloud) or **OSS Mode** (local SDK). It covers authentication, the entity-action API, and framework integration (PydanticAI, LangChain).
 
 ## Install
 
@@ -24,7 +24,7 @@ After installing, ask Claude:
 
 - "Set up a Stripe connector in Platform Mode"
 - "Connect to GitHub using OSS Mode"
-- "Configure Airbyte MCP tools"
+- "Integrate connectors with PydanticAI"
 
 ## Supported Connectors
 
@@ -43,7 +43,6 @@ See the [connector index](references/connector-index.md) for the full list.
 | [Programmatic Setup](references/programmatic-setup.md) | HTTP API setup with curl |
 | [Authentication](references/authentication.md) | Auth patterns per connector |
 | [Entity-Action API](references/entity-action-api.md) | API usage patterns |
-| [MCP Integration](references/mcp-integration.md) | Claude Desktop/Code MCP |
 | [Troubleshooting](references/troubleshooting.md) | Common issues |
 
 ## Requirements
