@@ -130,7 +130,7 @@ See the official [Asana API reference](https://developers.asana.com/reference/re
 
 ## Version information
 
-- **Package version:** 0.19.127
-- **Connector version:** 0.1.17
-- **Generated with Connector SDK commit SHA:** 513344c6596e4c750dff4973729629f6cb7f924a
+- **Package version:** 0.19.128
+- **Connector version:** 0.1.18
+- **Generated with Connector SDK commit SHA:** dfed83469598e4bdb185fb24ff557644895e7393
 - **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/asana/CHANGELOG.md)
