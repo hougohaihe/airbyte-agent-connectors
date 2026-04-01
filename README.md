@@ -17,7 +17,7 @@
 [![Slack](https://img.shields.io/badge/Slack-Join_Community-4A154B?logo=slack&logoColor=white)](https://slack.airbyte.com/)
 [![Twitter Follow](https://img.shields.io/twitter/follow/airbytehq?style=social)](https://twitter.com/airbytehq)
 
-Airbyte Agent Connectors are packages that let AI agents call third‑party APIs through strongly typed, well‑documented tools. Each connector is a standalone Python package that you can use directly in your app, plug into an agent framework, or expose through [MCP](https://github.com/airbytehq/airbyte-agent-connectors/tree/main/airbyte-agent-mcp) and APIs (coming soon).
+Airbyte Agent Connectors are packages that let AI agents call third‑party APIs through strongly typed, well‑documented tools. Each connector is a standalone Python package that you can use directly in your app or plug into an agent framework.
 
 ## What this repo contains
 * Python SDKs for specific SaaS APIs (for example Gong, Stripe, GitHub). 

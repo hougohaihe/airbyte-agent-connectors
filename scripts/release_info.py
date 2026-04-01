@@ -16,11 +16,6 @@ Usage:
         --changelog connectors/stripe/CHANGELOG.md \
         --package-name airbyte-agent-stripe
 
-    # For MCP:
-    python scripts/release_info.py \
-        --pyproject airbyte-agent-mcp/pyproject.toml \
-        --changelog airbyte-agent-mcp/CHANGELOG.md \
-        --package-name airbyte-agent-mcp
 """
 
 import argparse

@@ -9,7 +9,6 @@ This guide covers using Airbyte Agent Connectors directly via the Python SDK wit
 - [Basic Usage](#basic-usage)
 - [OAuth Connectors (Local Mode)](#oauth-connectors-local-mode)
 - [Environment Setup](#environment-setup)
-- [MCP Server Setup for Claude](#mcp-server-setup-for-claude)
 - [Agent Framework Integration](#agent-framework-integration)
 - [Credential Security Best Practices](#credential-security-best-practices)
 - [Common Operations Quick Reference](#common-operations-quick-reference)
@@ -25,7 +24,7 @@ Use OSS Mode when you want:
 - Single-tenant applications
 - Direct control over credentials
 - No dependency on Airbyte Cloud
-- Claude Code/Desktop integration via MCP
+- Direct control over credentials and no cloud dependency
 
 ## Installation
 
@@ -208,108 +207,6 @@ SALESFORCE_CLIENT_SECRET=your_client_secret
 SALESFORCE_REFRESH_TOKEN=your_refresh_token
 ```
 
-## MCP Server Setup for Claude
-
-Expose your connectors to Claude Code or Claude Desktop via MCP.
-
-### Step 1: Configure Connectors
-
-Create `configured_connectors.yaml` in the `airbyte-agent-mcp` directory:
-
-```yaml
-connectors:
-  # Stripe - API Key
-  - id: stripe
-    type: local
-    connector_name: stripe
-    description: "Stripe payment processing"
-    secrets:
-      api_key: STRIPE_API_KEY
-
-  # GitHub - Personal Access Token
-  - id: github
-    type: local
-    connector_name: github
-    description: "GitHub repositories and issues"
-    secrets:
-      token: GITHUB_TOKEN
-
-  # Gong - API Key pair
-  - id: gong
-    type: local
-    connector_name: gong
-    description: "Gong conversation intelligence"
-    secrets:
-      access_key: GONG_ACCESS_KEY
-      access_key_secret: GONG_ACCESS_KEY_SECRET
-
-  # Slack - Bot Token
-  - id: slack
-    type: local
-    connector_name: slack
-    description: "Slack messaging"
-    secrets:
-      token: SLACK_BOT_TOKEN
-```
-
-### Step 2: Create .env File
-
-Create `.env` in the `airbyte-agent-mcp` directory with your credentials:
-
-```bash
-STRIPE_API_KEY=sk_live_...
-GITHUB_TOKEN=ghp_...
-GONG_ACCESS_KEY=...
-GONG_ACCESS_KEY_SECRET=...
-SLACK_BOT_TOKEN=xoxb-...
-```
-
-### Step 3: Add to Claude Code
-
-```bash
-cd /path/to/your/project
-claude mcp add airbyte-agent-mcp --scope project
-```
-
-When prompted, provide the server configuration:
-
-```json
-{
-  "command": "uv",
-  "args": [
-    "--directory",
-    "/path/to/airbyte-agent-connectors/airbyte-agent-mcp",
-    "run",
-    "airbyte_agent_mcp"
-  ]
-}
-```
-
-### Step 4: Add to Claude Desktop
-
-Add to your Claude Desktop config:
-
-**macOS:** `~/Library/Application Support/Claude/claude_desktop_config.json`
-**Windows:** `%APPDATA%\Claude\claude_desktop_config.json`
-
-```json
-{
-  "mcpServers": {
-    "airbyte-agent-mcp": {
-      "command": "uv",
-      "args": [
-        "--directory",
-        "/path/to/airbyte-agent-connectors/airbyte-agent-mcp",
-        "run",
-        "airbyte_agent_mcp"
-      ]
-    }
-  }
-}
-```
-
-Restart Claude Desktop after making changes.
-
 ## Agent Framework Integration
 
 ### PydanticAI
@@ -432,11 +329,6 @@ await connector.execute("customers", "create", {"email": "user@example.com", "na
 - Always use `await` with `connector.execute()`
 - Run in async context with `asyncio.run(main())`
 
-### MCP Server not starting
-- Verify uv is installed: `uv --version`
-- Check paths in configuration are correct
-- Test manually: `cd airbyte-agent-mcp && uv run airbyte_agent_mcp`
-
 ## Setup Workflow
 
 ### OSS User: "Set up a [Connector] connector"
@@ -451,12 +343,10 @@ await connector.execute("customers", "create", {"email": "user@example.com", "na
        auth_config=GithubPersonalAccessTokenAuthConfig(token="ghp_...")
    )
    ```
-3. Optionally: Guide MCP server setup for Claude integration
 
 ## Related Documentation
 
 - [Platform Setup](platform-setup.md) - Hosted mode with UI visibility
-- [MCP Integration](mcp-integration.md) - Detailed MCP server configuration
 - [Authentication](authentication.md) - Auth patterns by connector
 - [Entity-Action API](entity-action-api.md) - Core API patterns
 - [Troubleshooting](troubleshooting.md) - Common errors and solutions

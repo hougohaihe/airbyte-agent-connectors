@@ -462,55 +462,6 @@ Found 4 open PRs:
 > await connector.execute("commits", "list", {"owner": "myorg", "repo": "backend", "per_page": 5})
 > ```
 
-**Developer types:**
-
-```
-Can you also set this up as an MCP server so I can query GitHub directly from Claude?
-```
-
-**Claude responds:**
-
-> I'll add the GitHub connector to Claude Code via MCP so you can query it conversationally.
-
-Claude runs:
-
-```bash
-claude mcp add airbyte-agent-mcp --scope project
-```
-
-> When prompted, I'll use this server configuration:
->
-> ```json
-> {
->   "command": "uv",
->   "args": [
->     "--directory",
->     "/path/to/airbyte-agent-connectors/airbyte-agent-mcp",
->     "run",
->     "airbyte_agent_mcp"
->   ]
-> }
-> ```
->
-> And I've created `configured_connectors.yaml` in the MCP directory:
->
-> ```yaml
-> connectors:
->   - id: github
->     type: local
->     connector_name: github
->     description: "GitHub repositories and issues"
->     secrets:
->       token: GITHUB_TOKEN
-> ```
->
-> After restarting Claude Code, you can ask things like:
-> - "List open issues in myorg/backend"
-> - "Show me PRs by sarah-dev"
-> - "Search for Python repos with over 1000 stars"
->
-> Claude will call the GitHub connector directly through MCP.
-
 ### What Happened Behind the Scenes
 
 Claude followed the [OSS Mode Setup Workflow](oss-setup.md#setup-workflow) workflow:
@@ -519,7 +470,6 @@ Claude followed the [OSS Mode Setup Workflow](oss-setup.md#setup-workflow) workf
 2. **Credential setup** -- created `.env` with the GitHub token (never hardcoded in source)
 3. **Code generation** -- wrote a complete async script using the entity-action API pattern
 4. **Verification** -- ran the script and confirmed live data came back
-5. **MCP setup** -- optionally configured the MCP server for conversational access from Claude
 
 The developer went from zero to pulling live GitHub data in under 60 seconds.
 
@@ -532,7 +482,7 @@ The developer went from zero to pulling live GitHub data in under 60 seconds.
 | **Setup time** | ~2 minutes (7 API calls) | ~30 seconds (install + run) |
 | **Credentials stored** | Managed by Airbyte Cloud | Local `.env` file |
 | **UI visibility** | Connector appears in app.airbyte.ai | No UI -- code only |
-| **Best for** | Production SaaS, multi-tenant apps | Prototyping, local dev, MCP integration |
+| **Best for** | Production SaaS, multi-tenant apps | Prototyping, local dev |
 | **Claude's role** | Executes full HTTP API workflow | Generates code and runs it locally |
 
 Both modes use the same entity-action API (`connector.execute(entity, action, params)`), so switching between them requires only changing how the connector is initialized -- not how you query data.
@@ -545,5 +495,4 @@ Both modes use the same entity-action API (`connector.execute(entity, action, pa
 - [OSS Setup](oss-setup.md) -- Complete OSS Mode reference
 - [Entity-Action API](entity-action-api.md) -- All entities, actions, and parameters
 - [Authentication](authentication.md) -- Auth patterns for every connector
-- [MCP Integration](mcp-integration.md) -- Detailed MCP server configuration
 - [Troubleshooting](troubleshooting.md) -- Common errors and solutions
