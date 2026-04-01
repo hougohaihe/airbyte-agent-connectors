@@ -30,7 +30,7 @@ from uuid import (
 AsanaConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('d0243522-dccf-4978-8ba0-37ed47a0bdbf'),
     name='asana',
-    version='0.1.17',
+    version='0.1.18',
     base_url='https://app.asana.com/api/1.0',
     auth=AuthConfig(
         options=[
@@ -173,6 +173,9 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'next_page': '$.next_page'},
+                    param_sources={
+                        'project': {'parent_entity': 'workspace_projects', 'parent_key': 'gid'},
+                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -548,6 +551,9 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'next_page': '$.next_page'},
+                    param_sources={
+                        'workspace': {'parent_entity': 'workspaces', 'parent_key': 'gid'},
+                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -1017,6 +1023,9 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'next_page': '$.next_page'},
+                    param_sources={
+                        'workspace': {'parent_entity': 'workspaces', 'parent_key': 'gid'},
+                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -1350,6 +1359,7 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                     meta_extractor={'next_page': '$.next_page'},
                     param_sources={
                         'user_gid': {'parent_entity': 'users', 'parent_key': 'gid'},
+                        'organization': {'parent_entity': 'workspaces', 'parent_key': 'gid'},
                     },
                 ),
             },
@@ -1403,6 +1413,9 @@ AsanaConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data',
                     meta_extractor={'next_page': '$.next_page'},
+                    param_sources={
+                        'parent': {'parent_entity': 'project_tasks', 'parent_key': 'gid'},
+                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
