@@ -19,6 +19,9 @@ from ._vendored.connector_sdk.schema.security import (
     AirbyteAuthConfig,
     AuthConfigFieldSpec,
 )
+from ._vendored.connector_sdk.schema.extensions import (
+    EntityRelationshipConfig,
+)
 from ._vendored.connector_sdk.schema.components import (
     PathOverrideConfig,
 )
@@ -29,7 +32,7 @@ from uuid import (
 LinearConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('1c5d8316-ed42-4473-8fbc-2626f03f070c'),
     name='linear',
-    version='0.1.15',
+    version='0.1.16',
     base_url='https://api.linear.app',
     auth=AuthConfig(
         type=AuthType.API_KEY,
@@ -1487,9 +1490,6 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.data.issue.comments.nodes',
                     meta_extractor={'hasNextPage': '$.data.issue.comments.pageInfo.hasNextPage', 'endCursor': '$.data.issue.comments.pageInfo.endCursor'},
-                    param_sources={
-                        'issueId': {'parent_entity': 'issues', 'parent_key': 'id'},
-                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='POST',
@@ -1800,6 +1800,14 @@ LinearConnectorModel: ConnectorModel = ConnectorModel(
                 'required': ['id', 'body'],
                 'x-airbyte-entity-name': 'comments',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='comments',
+                    target_entity='issues',
+                    foreign_key='issueId',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
     ],
     search_field_paths={
