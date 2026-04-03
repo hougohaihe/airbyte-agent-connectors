@@ -1,5 +1,10 @@
 # Granola changelog
 
+## [0.1.23] - 2026-04-03
+- Updated connector definition (YAML version 1.0.4)
+- Source commit: 525a1c0f
+- SDK version: 0.1.0
+
 ## [0.1.22] - 2026-04-01
 - Updated connector definition (YAML version 1.0.3)
 - Source commit: e4c74933

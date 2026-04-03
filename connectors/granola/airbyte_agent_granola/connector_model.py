@@ -19,6 +19,9 @@ from ._vendored.connector_sdk.schema.security import (
     AirbyteAuthConfig,
     AuthConfigFieldSpec,
 )
+from ._vendored.connector_sdk.schema.base import (
+    ExampleQuestions,
+)
 from uuid import (
     UUID,
 )
@@ -26,7 +29,7 @@ from uuid import (
 GranolaConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('9023923c-002f-4131-9554-3ebdf56540a4'),
     name='granola',
-    version='1.0.3',
+    version='1.0.4',
     base_url='https://public-api.granola.ai',
     auth=AuthConfig(
         type=AuthType.BEARER,
@@ -255,6 +258,20 @@ GranolaConnectorModel: ConnectorModel = ConnectorModel(
                                     'required': ['id'],
                                     'x-airbyte-entity-name': 'notes',
                                     'x-airbyte-stream-name': 'detailed_notes',
+                                    'x-airbyte-ai-hints': {
+                                        'summary': 'Meeting notes, transcripts, and action items from Granola',
+                                        'when_to_use': 'Questions about what was discussed on a call, meeting decisions, or action items',
+                                        'trigger_phrases': [
+                                            'what was discussed',
+                                            'meeting with',
+                                            'call with',
+                                            'action items from',
+                                            'notes from',
+                                        ],
+                                        'freshness': 'live',
+                                        'example_questions': ['What was discussed in the Scale Lite meeting?', 'Show me notes that mention budget reviews', 'What meetings happened this quarter?'],
+                                        'search_strategy': 'Search across both title and summary_text for best results (use OR filter)',
+                                    },
                                 },
                             },
                             'hasMore': {'type': 'boolean', 'description': 'Whether there are more notes to fetch'},
@@ -458,6 +475,20 @@ GranolaConnectorModel: ConnectorModel = ConnectorModel(
                         'required': ['id'],
                         'x-airbyte-entity-name': 'notes',
                         'x-airbyte-stream-name': 'detailed_notes',
+                        'x-airbyte-ai-hints': {
+                            'summary': 'Meeting notes, transcripts, and action items from Granola',
+                            'when_to_use': 'Questions about what was discussed on a call, meeting decisions, or action items',
+                            'trigger_phrases': [
+                                'what was discussed',
+                                'meeting with',
+                                'call with',
+                                'action items from',
+                                'notes from',
+                            ],
+                            'freshness': 'live',
+                            'example_questions': ['What was discussed in the Scale Lite meeting?', 'Show me notes that mention budget reviews', 'What meetings happened this quarter?'],
+                            'search_strategy': 'Search across both title and summary_text for best results (use OR filter)',
+                        },
                     },
                 ),
             },
@@ -523,6 +554,34 @@ GranolaConnectorModel: ConnectorModel = ConnectorModel(
                 'required': ['id'],
                 'x-airbyte-entity-name': 'notes',
                 'x-airbyte-stream-name': 'detailed_notes',
+                'x-airbyte-ai-hints': {
+                    'summary': 'Meeting notes, transcripts, and action items from Granola',
+                    'when_to_use': 'Questions about what was discussed on a call, meeting decisions, or action items',
+                    'trigger_phrases': [
+                        'what was discussed',
+                        'meeting with',
+                        'call with',
+                        'action items from',
+                        'notes from',
+                    ],
+                    'freshness': 'live',
+                    'example_questions': ['What was discussed in the Scale Lite meeting?', 'Show me notes that mention budget reviews', 'What meetings happened this quarter?'],
+                    'search_strategy': 'Search across both title and summary_text for best results (use OR filter)',
+                },
+            },
+            ai_hints={
+                'summary': 'Meeting notes, transcripts, and action items from Granola',
+                'when_to_use': 'Questions about what was discussed on a call, meeting decisions, or action items',
+                'trigger_phrases': [
+                    'what was discussed',
+                    'meeting with',
+                    'call with',
+                    'action items from',
+                    'notes from',
+                ],
+                'freshness': 'live',
+                'example_questions': ['What was discussed in the Scale Lite meeting?', 'Show me notes that mention budget reviews', 'What meetings happened this quarter?'],
+                'search_strategy': 'Search across both title and summary_text for best results (use OR filter)',
             },
         ),
     ],
@@ -547,4 +606,24 @@ GranolaConnectorModel: ConnectorModel = ConnectorModel(
             'transcript[]',
         ],
     },
+    example_questions=ExampleQuestions(
+        direct=[
+            'List all meeting notes from Granola',
+            'Show me recent meeting notes',
+            'Get the details of a specific note',
+            'List notes created in the last week',
+        ],
+        search=[
+            'Find meeting notes from last month',
+            'Which meetings had the most attendees?',
+            'Show me notes that mention budget reviews',
+            'What meetings happened this quarter?',
+        ],
+        unsupported=[
+            'Create a new meeting note',
+            'Delete a meeting note',
+            'Update an existing note',
+            'Share a note with someone',
+        ],
+    ),
 )
