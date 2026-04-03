@@ -19,6 +19,9 @@ from ._vendored.connector_sdk.schema.security import (
     AirbyteAuthConfig,
     AuthConfigFieldSpec,
 )
+from ._vendored.connector_sdk.schema.extensions import (
+    EntityRelationshipConfig,
+)
 from ._vendored.connector_sdk.schema.components import (
     PathOverrideConfig,
 )
@@ -29,7 +32,7 @@ from uuid import (
 GoogleSearchConsoleConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('eb4c9e00-db83-4d63-a386-39cfa91012a8'),
     name='google-search-console',
-    version='1.0.1',
+    version='1.0.2',
     base_url='https://www.googleapis.com/webmasters/v3',
     auth=AuthConfig(
         type=AuthType.OAUTH2,
@@ -232,9 +235,6 @@ GoogleSearchConsoleConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.sitemap',
-                    param_sources={
-                        'siteUrl': {'parent_entity': 'sites', 'parent_key': 'siteUrl'},
-                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -353,6 +353,15 @@ GoogleSearchConsoleConnectorModel: ConnectorModel = ConnectorModel(
                 },
                 'x-airbyte-entity-name': 'sitemaps',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='sitemaps',
+                    target_entity='sites',
+                    foreign_key='siteUrl',
+                    target_key='siteUrl',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='search_analytics_by_date',
@@ -473,11 +482,17 @@ GoogleSearchConsoleConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.rows',
-                    param_sources={
-                        'siteUrl': {'parent_entity': 'sites', 'parent_key': 'siteUrl'},
-                    },
                 ),
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='search_analytics_by_date',
+                    target_entity='sites',
+                    foreign_key='siteUrl',
+                    target_key='siteUrl',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='search_analytics_by_country',
@@ -598,11 +613,17 @@ GoogleSearchConsoleConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.rows',
-                    param_sources={
-                        'siteUrl': {'parent_entity': 'sites', 'parent_key': 'siteUrl'},
-                    },
                 ),
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='search_analytics_by_country',
+                    target_entity='sites',
+                    foreign_key='siteUrl',
+                    target_key='siteUrl',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='search_analytics_by_device',
@@ -723,11 +744,17 @@ GoogleSearchConsoleConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.rows',
-                    param_sources={
-                        'siteUrl': {'parent_entity': 'sites', 'parent_key': 'siteUrl'},
-                    },
                 ),
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='search_analytics_by_device',
+                    target_entity='sites',
+                    foreign_key='siteUrl',
+                    target_key='siteUrl',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='search_analytics_by_page',
@@ -848,11 +875,17 @@ GoogleSearchConsoleConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.rows',
-                    param_sources={
-                        'siteUrl': {'parent_entity': 'sites', 'parent_key': 'siteUrl'},
-                    },
                 ),
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='search_analytics_by_page',
+                    target_entity='sites',
+                    foreign_key='siteUrl',
+                    target_key='siteUrl',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='search_analytics_by_query',
@@ -973,11 +1006,17 @@ GoogleSearchConsoleConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.rows',
-                    param_sources={
-                        'siteUrl': {'parent_entity': 'sites', 'parent_key': 'siteUrl'},
-                    },
                 ),
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='search_analytics_by_query',
+                    target_entity='sites',
+                    foreign_key='siteUrl',
+                    target_key='siteUrl',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='search_analytics_all_fields',
@@ -1110,11 +1149,17 @@ GoogleSearchConsoleConnectorModel: ConnectorModel = ConnectorModel(
                         },
                     },
                     record_extractor='$.rows',
-                    param_sources={
-                        'siteUrl': {'parent_entity': 'sites', 'parent_key': 'siteUrl'},
-                    },
                 ),
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='search_analytics_all_fields',
+                    target_entity='sites',
+                    foreign_key='siteUrl',
+                    target_key='siteUrl',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
     ],
     search_field_paths={
