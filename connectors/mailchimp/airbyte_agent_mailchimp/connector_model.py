@@ -19,6 +19,9 @@ from ._vendored.connector_sdk.schema.security import (
     AirbyteAuthConfig,
     AuthConfigFieldSpec,
 )
+from ._vendored.connector_sdk.schema.extensions import (
+    EntityRelationshipConfig,
+)
 from uuid import (
     UUID,
 )
@@ -26,7 +29,7 @@ from uuid import (
 MailchimpConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('b03a9f3e-22a5-11eb-adc1-0242ac120002'),
     name='mailchimp',
-    version='1.0.9',
+    version='1.0.10',
     base_url='https://{data_center}.api.mailchimp.com/3.0',
     auth=AuthConfig(
         type=AuthType.BASIC,
@@ -1929,9 +1932,6 @@ MailchimpConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.members',
                     meta_extractor={'total_items': '$.total_items'},
-                    param_sources={
-                        'list_id': {'parent_entity': 'lists', 'parent_key': 'id'},
-                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -2341,6 +2341,14 @@ MailchimpConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'list_members',
                 'x-airbyte-stream-name': 'list_members',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='list_members',
+                    target_entity='lists',
+                    foreign_key='list_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='reports',
@@ -3230,9 +3238,6 @@ MailchimpConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.emails',
                     meta_extractor={'total_items': '$.total_items'},
-                    param_sources={
-                        'campaign_id': {'parent_entity': 'campaigns', 'parent_key': 'id'},
-                    },
                 ),
             },
             entity_schema={
@@ -3293,6 +3298,14 @@ MailchimpConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'email_activity',
                 'x-airbyte-stream-name': 'email_activity',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='email_activity',
+                    target_entity='campaigns',
+                    foreign_key='campaign_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='automations',
@@ -3740,9 +3753,6 @@ MailchimpConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.tags',
                     meta_extractor={'total_items': '$.total_items'},
-                    param_sources={
-                        'list_id': {'parent_entity': 'lists', 'parent_key': 'id'},
-                    },
                 ),
             },
             entity_schema={
@@ -3758,6 +3768,14 @@ MailchimpConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'tags',
                 'x-airbyte-stream-name': 'tags',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='tags',
+                    target_entity='lists',
+                    foreign_key='list_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='interest_categories',
@@ -3834,9 +3852,6 @@ MailchimpConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.categories',
                     meta_extractor={'total_items': '$.total_items'},
-                    param_sources={
-                        'list_id': {'parent_entity': 'lists', 'parent_key': 'id'},
-                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -3914,6 +3929,14 @@ MailchimpConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'interest_categories',
                 'x-airbyte-stream-name': 'interest_categories',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='interest_categories',
+                    target_entity='lists',
+                    foreign_key='list_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='interests',
@@ -3992,10 +4015,6 @@ MailchimpConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.interests',
                     meta_extractor={'total_items': '$.total_items'},
-                    param_sources={
-                        'list_id': {'parent_entity': 'lists', 'parent_key': 'id'},
-                        'interest_category_id': {'parent_entity': 'interest_categories', 'parent_key': 'id'},
-                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -4068,6 +4087,20 @@ MailchimpConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'interests',
                 'x-airbyte-stream-name': 'interests',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='interests',
+                    target_entity='lists',
+                    foreign_key='list_id',
+                    cardinality='many_to_one',
+                ),
+                EntityRelationshipConfig(
+                    source_entity='interests',
+                    target_entity='interest_categories',
+                    foreign_key='interest_category_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='segments',
@@ -4181,9 +4214,6 @@ MailchimpConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.segments',
                     meta_extractor={'total_items': '$.total_items'},
-                    param_sources={
-                        'list_id': {'parent_entity': 'lists', 'parent_key': 'id'},
-                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -4309,6 +4339,14 @@ MailchimpConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'segments',
                 'x-airbyte-stream-name': 'segments',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='segments',
+                    target_entity='lists',
+                    foreign_key='list_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='segment_members',
@@ -4485,10 +4523,6 @@ MailchimpConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.members',
                     meta_extractor={'total_items': '$.total_items'},
-                    param_sources={
-                        'list_id': {'parent_entity': 'lists', 'parent_key': 'id'},
-                        'segment_id': {'parent_entity': 'segments', 'parent_key': 'id'},
-                    },
                 ),
             },
             entity_schema={
@@ -4626,6 +4660,20 @@ MailchimpConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'segment_members',
                 'x-airbyte-stream-name': 'segment_members',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='segment_members',
+                    target_entity='lists',
+                    foreign_key='list_id',
+                    cardinality='many_to_one',
+                ),
+                EntityRelationshipConfig(
+                    source_entity='segment_members',
+                    target_entity='segments',
+                    foreign_key='segment_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='unsubscribes',
@@ -4716,9 +4764,6 @@ MailchimpConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.unsubscribes',
                     meta_extractor={'total_items': '$.total_items'},
-                    param_sources={
-                        'campaign_id': {'parent_entity': 'campaigns', 'parent_key': 'id'},
-                    },
                 ),
             },
             entity_schema={
@@ -4767,6 +4812,14 @@ MailchimpConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'unsubscribes',
                 'x-airbyte-stream-name': 'unsubscribes',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='unsubscribes',
+                    target_entity='campaigns',
+                    foreign_key='campaign_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
     ],
     search_field_paths={
