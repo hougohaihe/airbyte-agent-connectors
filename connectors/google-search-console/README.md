@@ -117,7 +117,7 @@ See the official [Google-Search-Console API reference](https://developers.google
 
 ## Version information
 
-- **Package version:** 0.1.10
-- **Connector version:** 1.0.1
-- **Generated with Connector SDK commit SHA:** e4c7493336bcabf5bea5a761ab7b4edfe2a606a5
+- **Package version:** 0.1.11
+- **Connector version:** 1.0.2
+- **Generated with Connector SDK commit SHA:** 7956e2eb1a5082bef0be1b8ededead13e1089437
 - **Changelog:** [View changelog](https://github.com/airbytehq/airbyte-agent-connectors/blob/main/connectors/google-search-console/CHANGELOG.md)
