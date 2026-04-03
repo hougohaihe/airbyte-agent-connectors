@@ -19,6 +19,9 @@ from ._vendored.connector_sdk.schema.security import (
     AirbyteAuthConfig,
     AuthConfigFieldSpec,
 )
+from ._vendored.connector_sdk.schema.extensions import (
+    EntityRelationshipConfig,
+)
 from uuid import (
     UUID,
 )
@@ -26,7 +29,7 @@ from uuid import (
 PinterestConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('5cb7e5fe-38c2-11ec-8d3d-0242ac130003'),
     name='pinterest',
-    version='0.1.2',
+    version='0.1.3',
     base_url='https://api.pinterest.com/v5',
     auth=AuthConfig(
         type=AuthType.OAUTH2,
@@ -727,9 +730,6 @@ PinterestConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.items',
                     meta_extractor={'bookmark': '$.bookmark'},
-                    param_sources={
-                        'ad_account_id': {'parent_entity': 'ad_accounts', 'parent_key': 'id'},
-                    },
                 ),
             },
             entity_schema={
@@ -852,6 +852,14 @@ PinterestConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'campaigns',
                 'x-airbyte-stream-name': 'campaigns',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='campaigns',
+                    target_entity='ad_accounts',
+                    foreign_key='ad_account_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='ad_groups',
@@ -1064,9 +1072,6 @@ PinterestConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.items',
                     meta_extractor={'bookmark': '$.bookmark'},
-                    param_sources={
-                        'ad_account_id': {'parent_entity': 'ad_accounts', 'parent_key': 'id'},
-                    },
                 ),
             },
             entity_schema={
@@ -1235,6 +1240,14 @@ PinterestConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'ad_groups',
                 'x-airbyte-stream-name': 'ad_groups',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='ad_groups',
+                    target_entity='ad_accounts',
+                    foreign_key='ad_account_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='ads',
@@ -1454,9 +1467,6 @@ PinterestConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.items',
                     meta_extractor={'bookmark': '$.bookmark'},
-                    param_sources={
-                        'ad_account_id': {'parent_entity': 'ad_accounts', 'parent_key': 'id'},
-                    },
                 ),
             },
             entity_schema={
@@ -1632,6 +1642,14 @@ PinterestConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'ads',
                 'x-airbyte-stream-name': 'ads',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='ads',
+                    target_entity='ad_accounts',
+                    foreign_key='ad_account_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='board_sections',
@@ -1688,9 +1706,6 @@ PinterestConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.items',
                     meta_extractor={'bookmark': '$.bookmark'},
-                    param_sources={
-                        'board_id': {'parent_entity': 'boards', 'parent_key': 'id'},
-                    },
                 ),
             },
             entity_schema={
@@ -1710,6 +1725,14 @@ PinterestConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'board_sections',
                 'x-airbyte-stream-name': 'board_sections',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='board_sections',
+                    target_entity='boards',
+                    foreign_key='board_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='board_pins',
@@ -1848,9 +1871,6 @@ PinterestConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.items',
                     meta_extractor={'bookmark': '$.bookmark'},
-                    param_sources={
-                        'board_id': {'parent_entity': 'boards', 'parent_key': 'id'},
-                    },
                 ),
             },
             entity_schema={
@@ -1952,6 +1972,14 @@ PinterestConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'board_pins',
                 'x-airbyte-stream-name': 'board_pins',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='board_pins',
+                    target_entity='boards',
+                    foreign_key='board_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='catalogs',
@@ -2489,9 +2517,6 @@ PinterestConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.items',
                     meta_extractor={'bookmark': '$.bookmark'},
-                    param_sources={
-                        'ad_account_id': {'parent_entity': 'ad_accounts', 'parent_key': 'id'},
-                    },
                 ),
             },
             entity_schema={
@@ -2582,6 +2607,14 @@ PinterestConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'audiences',
                 'x-airbyte-stream-name': 'audiences',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='audiences',
+                    target_entity='ad_accounts',
+                    foreign_key='ad_account_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='conversion_tags',
@@ -2696,9 +2729,6 @@ PinterestConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.items',
                     meta_extractor={'bookmark': '$.bookmark'},
-                    param_sources={
-                        'ad_account_id': {'parent_entity': 'ad_accounts', 'parent_key': 'id'},
-                    },
                 ),
             },
             entity_schema={
@@ -2776,6 +2806,14 @@ PinterestConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'conversion_tags',
                 'x-airbyte-stream-name': 'conversion_tags',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='conversion_tags',
+                    target_entity='ad_accounts',
+                    foreign_key='ad_account_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='customer_lists',
@@ -2864,9 +2902,6 @@ PinterestConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.items',
                     meta_extractor={'bookmark': '$.bookmark'},
-                    param_sources={
-                        'ad_account_id': {'parent_entity': 'ad_accounts', 'parent_key': 'id'},
-                    },
                 ),
             },
             entity_schema={
@@ -2918,6 +2953,14 @@ PinterestConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'customer_lists',
                 'x-airbyte-stream-name': 'customer_lists',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='customer_lists',
+                    target_entity='ad_accounts',
+                    foreign_key='ad_account_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='keywords',
@@ -2999,9 +3042,6 @@ PinterestConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.items',
                     meta_extractor={'bookmark': '$.bookmark'},
-                    param_sources={
-                        'ad_account_id': {'parent_entity': 'ad_accounts', 'parent_key': 'id'},
-                    },
                 ),
             },
             entity_schema={
@@ -3045,6 +3085,14 @@ PinterestConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'keywords',
                 'x-airbyte-stream-name': 'keywords',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='keywords',
+                    target_entity='ad_accounts',
+                    foreign_key='ad_account_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
     ],
     search_field_paths={
