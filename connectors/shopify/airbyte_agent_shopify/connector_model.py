@@ -19,6 +19,9 @@ from ._vendored.connector_sdk.schema.security import (
     AirbyteAuthConfig,
     AuthConfigFieldSpec,
 )
+from ._vendored.connector_sdk.schema.extensions import (
+    EntityRelationshipConfig,
+)
 from uuid import (
     UUID,
 )
@@ -26,7 +29,7 @@ from uuid import (
 ShopifyConnectorModel: ConnectorModel = ConnectorModel(
     id=UUID('9da77001-af33-4bcd-be46-6252bf9342b9'),
     name='shopify',
-    version='0.1.10',
+    version='0.1.11',
     base_url='https://{shop}.myshopify.com/admin/api/2025-01',
     auth=AuthConfig(
         type=AuthType.API_KEY,
@@ -4289,9 +4292,6 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.variants',
                     meta_extractor={'next_page_url': '@link.next'},
-                    param_sources={
-                        'product_id': {'parent_entity': 'products', 'parent_key': 'id'},
-                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -4534,6 +4534,14 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'product_variants',
                 'x-airbyte-stream-name': 'product_variants',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='product_variants',
+                    target_entity='products',
+                    foreign_key='product_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='product_images',
@@ -4615,9 +4623,6 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.images',
                     meta_extractor={'next_page_url': '@link.next'},
-                    param_sources={
-                        'product_id': {'parent_entity': 'products', 'parent_key': 'id'},
-                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -4741,6 +4746,14 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'product_images',
                 'x-airbyte-stream-name': 'product_images',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='product_images',
+                    target_entity='products',
+                    foreign_key='product_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='abandoned_checkouts',
@@ -5894,9 +5907,6 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.inventory_levels',
                     meta_extractor={'next_page_url': '@link.next'},
-                    param_sources={
-                        'location_id': {'parent_entity': 'locations', 'parent_key': 'id'},
-                    },
                 ),
             },
             entity_schema={
@@ -5921,6 +5931,14 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'inventory_levels',
                 'x-airbyte-stream-name': 'inventory_levels',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='inventory_levels',
+                    target_entity='locations',
+                    foreign_key='location_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='inventory_items',
@@ -6919,9 +6937,6 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.discount_codes',
                     meta_extractor={'next_page_url': '@link.next'},
-                    param_sources={
-                        'price_rule_id': {'parent_entity': 'price_rules', 'parent_key': 'id'},
-                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -6995,6 +7010,14 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'discount_codes',
                 'x-airbyte-stream-name': 'discount_codes',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='discount_codes',
+                    target_entity='price_rules',
+                    foreign_key='price_rule_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='custom_collections',
@@ -9164,9 +9187,6 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.fulfillments',
                     meta_extractor={'next_page_url': '@link.next'},
-                    param_sources={
-                        'order_id': {'parent_entity': 'orders', 'parent_key': 'id'},
-                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -9412,6 +9432,14 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'fulfillments',
                 'x-airbyte-stream-name': 'fulfillments',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='fulfillments',
+                    target_entity='orders',
+                    foreign_key='order_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='order_refunds',
@@ -9584,9 +9612,6 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.refunds',
                     meta_extractor={'next_page_url': '@link.next'},
-                    param_sources={
-                        'order_id': {'parent_entity': 'orders', 'parent_key': 'id'},
-                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -9804,6 +9829,14 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'order_refunds',
                 'x-airbyte-stream-name': 'order_refunds',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='order_refunds',
+                    target_entity='orders',
+                    foreign_key='order_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='transactions',
@@ -9914,9 +9947,6 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.transactions',
                     meta_extractor={'next_page_url': '@link.next'},
-                    param_sources={
-                        'order_id': {'parent_entity': 'orders', 'parent_key': 'id'},
-                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -10098,6 +10128,14 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'transactions',
                 'x-airbyte-stream-name': 'transactions',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='transactions',
+                    target_entity='orders',
+                    foreign_key='order_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='tender_transactions',
@@ -10576,11 +10614,16 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.metafields',
                     meta_extractor={'next_page_url': '@link.next'},
-                    param_sources={
-                        'customer_id': {'parent_entity': 'customers', 'parent_key': 'id'},
-                    },
                 ),
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='metafield_customers',
+                    target_entity='customers',
+                    foreign_key='customer_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='metafield_products',
@@ -10669,11 +10712,16 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.metafields',
                     meta_extractor={'next_page_url': '@link.next'},
-                    param_sources={
-                        'product_id': {'parent_entity': 'products', 'parent_key': 'id'},
-                    },
                 ),
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='metafield_products',
+                    target_entity='products',
+                    foreign_key='product_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='metafield_orders',
@@ -10762,11 +10810,16 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.metafields',
                     meta_extractor={'next_page_url': '@link.next'},
-                    param_sources={
-                        'order_id': {'parent_entity': 'orders', 'parent_key': 'id'},
-                    },
                 ),
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='metafield_orders',
+                    target_entity='orders',
+                    foreign_key='order_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='metafield_draft_orders',
@@ -10855,11 +10908,16 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.metafields',
                     meta_extractor={'next_page_url': '@link.next'},
-                    param_sources={
-                        'draft_order_id': {'parent_entity': 'draft_orders', 'parent_key': 'id'},
-                    },
                 ),
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='metafield_draft_orders',
+                    target_entity='draft_orders',
+                    foreign_key='draft_order_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='metafield_locations',
@@ -10948,11 +11006,16 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.metafields',
                     meta_extractor={'next_page_url': '@link.next'},
-                    param_sources={
-                        'location_id': {'parent_entity': 'locations', 'parent_key': 'id'},
-                    },
                 ),
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='metafield_locations',
+                    target_entity='locations',
+                    foreign_key='location_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='metafield_product_variants',
@@ -11041,11 +11104,16 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.metafields',
                     meta_extractor={'next_page_url': '@link.next'},
-                    param_sources={
-                        'variant_id': {'parent_entity': 'product_variants', 'parent_key': 'id'},
-                    },
                 ),
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='metafield_product_variants',
+                    target_entity='product_variants',
+                    foreign_key='variant_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='metafield_smart_collections',
@@ -11134,11 +11202,16 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.metafields',
                     meta_extractor={'next_page_url': '@link.next'},
-                    param_sources={
-                        'collection_id': {'parent_entity': 'smart_collections', 'parent_key': 'id'},
-                    },
                 ),
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='metafield_smart_collections',
+                    target_entity='smart_collections',
+                    foreign_key='collection_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='metafield_product_images',
@@ -11229,12 +11302,22 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                     record_extractor='$.metafields',
                     meta_extractor={'next_page_url': '@link.next'},
                     untested=True,
-                    param_sources={
-                        'product_id': {'parent_entity': 'products', 'parent_key': 'id'},
-                        'image_id': {'parent_entity': 'product_images', 'parent_key': 'id'},
-                    },
                 ),
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='metafield_product_images',
+                    target_entity='products',
+                    foreign_key='product_id',
+                    cardinality='many_to_one',
+                ),
+                EntityRelationshipConfig(
+                    source_entity='metafield_product_images',
+                    target_entity='product_images',
+                    foreign_key='image_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='customer_address',
@@ -11339,9 +11422,6 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.addresses',
                     meta_extractor={'next_page_url': '@link.next'},
-                    param_sources={
-                        'customer_id': {'parent_entity': 'customers', 'parent_key': 'id'},
-                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -11433,6 +11513,14 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                     record_extractor='$.customer_address',
                 ),
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='customer_address',
+                    target_entity='customers',
+                    foreign_key='customer_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
         EntityDefinition(
             name='fulfillment_orders',
@@ -11527,9 +11615,6 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                     },
                     record_extractor='$.fulfillment_orders',
                     meta_extractor={'next_page_url': '@link.next'},
-                    param_sources={
-                        'order_id': {'parent_entity': 'orders', 'parent_key': 'id'},
-                    },
                 ),
                 Action.GET: EndpointDefinition(
                     method='GET',
@@ -11686,6 +11771,14 @@ ShopifyConnectorModel: ConnectorModel = ConnectorModel(
                 'x-airbyte-entity-name': 'fulfillment_orders',
                 'x-airbyte-stream-name': 'fulfillment_orders',
             },
+            relationships=[
+                EntityRelationshipConfig(
+                    source_entity='fulfillment_orders',
+                    target_entity='orders',
+                    foreign_key='order_id',
+                    cardinality='many_to_one',
+                ),
+            ],
         ),
     ],
     server_variable_defaults={'shop': 'my-store'},
