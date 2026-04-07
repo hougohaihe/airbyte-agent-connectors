@@ -19,6 +19,9 @@ from ._vendored.connector_sdk.schema.security import (
     AirbyteAuthConfig,
     AuthConfigFieldSpec,
 )
+from ._vendored.connector_sdk.schema.base import (
+    ExampleQuestions,
+)
 from uuid import (
     UUID,
 )
@@ -3328,4 +3331,29 @@ AshbyConnectorModel: ConnectorModel = ConnectorModel(
             },
         ),
     ],
+    example_questions=ExampleQuestions(
+        direct=[
+            'List all open jobs',
+            'Show me all candidates',
+            'List recent applications',
+            'List all departments',
+            'Show me all job postings',
+            'List all users in the organization',
+        ],
+        search=[
+            'Show me candidates who applied last month',
+            'What are the top sources for job applications?',
+            'Compare the number of applications across different departments',
+            'Find candidates with multiple applications',
+            'Summarize the candidate pipeline for our latest job posting',
+            'Find the most active departments in recruiting this month',
+        ],
+        unsupported=[
+            'Create a new job posting',
+            'Schedule an interview for a candidate',
+            'Update a candidates application status',
+            'Delete a candidate profile',
+            'Send an offer letter to a candidate',
+        ],
+    ),
 )
