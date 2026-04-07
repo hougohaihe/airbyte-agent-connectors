@@ -23,6 +23,9 @@ from ._vendored.connector_sdk.schema.security import (
 from ._vendored.connector_sdk.schema.extensions import (
     EntityRelationshipConfig,
 )
+from ._vendored.connector_sdk.schema.base import (
+    ExampleQuestions,
+)
 from ._vendored.connector_sdk.schema.components import (
     PathOverrideConfig,
 )
@@ -4488,5 +4491,22 @@ ZendeskSupportConnectorModel: ConnectorModel = ConnectorModel(
             'verified',
         ],
     },
+    example_questions=ExampleQuestions(
+        direct=['Show me the tickets assigned to me last week', 'List all unresolved tickets', 'Show me the details of recent tickets'],
+        search=[
+            'What are the top 5 support issues our organization has faced this month?',
+            'Analyze the satisfaction ratings for our support team in the last 30 days',
+            'Compare ticket resolution times across different support groups',
+            'Identify the most common ticket fields used in our support workflow',
+            'Summarize the performance of our SLA policies this quarter',
+        ],
+        unsupported=[
+            'Create a new support ticket for {customer}',
+            'Update the priority of this ticket',
+            'Assign this ticket to {team_member}',
+            'Delete these old support tickets',
+            'Send an automatic response to {customer}',
+        ],
+    ),
     server_variable_defaults={'subdomain': 'your-subdomain'},
 )
