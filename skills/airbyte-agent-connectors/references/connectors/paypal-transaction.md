@@ -1,5 +1,5 @@
 <!-- AUTO-GENERATED from connectors/paypal-transaction/ -- do not edit manually -->
-<!-- Source format: v1 | Generated: 2026-04-07 -->
+<!-- Source format: v1 | Generated: 2026-04-08 -->
 
 # PayPal Transaction
 
