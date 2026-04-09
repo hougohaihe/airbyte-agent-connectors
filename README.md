@@ -100,5 +100,6 @@ For issues, questions, or contributions, please open an issue on GitHub.
 
 > These are my own notes as I work through this codebase.
 
-- The `skills/` directory is where most of the interesting AI logic lives — good starting point for exploration
-- `pytest -v -x` is my preferred way to run tests locally; stops fast on failures instead of churning through everything
+- The `skills/` directory is where most of the interesting AI logic lives — start there when exploring how connectors expose capabilities to agents.
+- The `.claude-plugin/` config controls how Claude interacts with this project; worth reading before making changes to connector interfaces.
+- Running `pytest -v -x` locally before pushing saves a lot of CI round-trips.
