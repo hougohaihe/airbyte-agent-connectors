@@ -100,7 +100,6 @@ For issues, questions, or contributions, please open an issue on GitHub.
 
 > These are my own notes as I work through this codebase.
 
-- The `skills/` directory is where most of the interesting AI logic lives — start there when exploring.
-- The `connectors/` directory follows the standard Airbyte connector spec; each connector has its own `manifest.yaml`.
-- Tip: run `pytest -v -x` during development so failures are obvious immediately rather than buried in output.
-- TODO: look into whether the `generate-skills` workflow can be triggered manually for faster iteration.
+- The `skills/` directory is where most of the interesting AI logic lives — good place to start exploring
+- The `connectors/` directory follows the same structure as upstream airbyte connectors, so the official Airbyte docs are helpful here
+- TODO: look into how the `.claude-plugin/` config affects skill generation
