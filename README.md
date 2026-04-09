@@ -2,6 +2,8 @@
 
 A fork of [airbytehq/airbyte-agent-connectors](https://github.com/airbytehq/airbyte-agent-connectors) that provides AI-powered data integration connectors.
 
+> **Personal Fork**: This is my personal learning fork to explore AI-powered data connectors and experiment with custom integrations.
+
 ## Overview
 
 This project extends Airbyte's connector framework with agent-based capabilities, enabling intelligent data synchronization and transformation through AI-powered workflows.
