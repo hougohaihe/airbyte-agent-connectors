@@ -60,6 +60,9 @@ pip install -r requirements-dev.txt
 
 # Run tests
 pytest
+
+# Run tests with verbose output and stop on first failure (useful during active development)
+pytest -v -x
 ```
 
 ## CI/CD
