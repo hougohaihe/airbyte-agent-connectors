@@ -95,3 +95,10 @@ This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENS
 ## Support
 
 For issues, questions, or contributions, please open an issue on GitHub.
+
+## Personal Notes
+
+> These are my own notes as I work through this codebase.
+
+- The `skills/` directory is where most of the interesting AI logic lives — good starting point for exploration
+- `pytest -v -x` is my preferred way to run tests locally; stops fast on failures instead of churning through everything
