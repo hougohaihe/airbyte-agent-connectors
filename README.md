@@ -100,6 +100,6 @@ For issues, questions, or contributions, please open an issue on GitHub.
 
 > These are my own notes as I work through this codebase.
 
-- The `skills/` directory is where most of the interesting AI logic lives — good starting point for understanding how connectors are extended with agent capabilities.
-- The `.claude-plugin/` config controls how Claude interacts with connector definitions; worth reading before making changes to connector schemas.
-- When running tests locally, `pytest -v -x` is the most useful combo — stops immediately on the first failure so you're not scrolling through a wall of errors.
+- The `skills/` directory is where most of the interesting AI logic lives — good starting point for understanding how connectors are wrapped with agent capabilities.
+- The `.claude-plugin/` config controls how Claude interacts with connector definitions; worth reading before modifying any connector schemas.
+- TODO: experiment with building a custom connector for personal Notion workspace.
