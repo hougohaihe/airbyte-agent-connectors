@@ -40,7 +40,8 @@ class AirbyteStream:
 
     name: str
     json_schema: Dict[str, Any]
-    supported_sync_modes: List[str] = field(default_factory=lambda: ["full_refresh"])
+    # Added incremental to defaults - most real sources support it and it's more efficient
+    supported_sync_modes: List[str] = field(default_factory=lambda: ["full_refresh", "incremental"])
     namespace: Optional[str] = None
     source_defined_cursor: bool = False
     default_cursor_field: List[str] = field(default_factory=list)
@@ -100,5 +101,4 @@ class BaseConnector(abc.ABC):
             state: Optional incremental state from a previous sync.
 
         Yields:
-            AirbyteRecord instances for each row of data.
-        """
+    
