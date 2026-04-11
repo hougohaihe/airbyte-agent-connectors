@@ -100,6 +100,6 @@ For issues, questions, or contributions, please open an issue on GitHub.
 
 > These are my own notes as I work through this codebase.
 
-- The `skills/` directory is where most of the interesting AI logic lives — good starting point for understanding how connectors get their agent capabilities.
-- The `connectors/` directory mirrors the structure from the upstream repo; each subdirectory is a self-contained connector.
-- TODO: look into how the `generate-skills` workflow decides which connectors to process — seems like it checks for a manifest file but I haven't confirmed yet.
+- The `skills/` directory is where most of the interesting AI logic lives — good starting point for understanding how connectors are wrapped with agent capabilities.
+- The `.claude-plugin/` config controls how Claude interacts with connector definitions; worth reading before making changes to connector schemas.
+- When running tests locally, `pytest -v -x` is the most useful invocation — stops on first failure so you're not scrolling through a wall of output.
