@@ -20,7 +20,7 @@ class ConnectorConfig:
 
     connector_name: str
     connector_version: str = "0.1.0"
-    log_level: str = "INFO"
+    log_level: str = "WARNING"  # Changed from INFO - less noisy during local dev
     extra: Dict[str, Any] = field(default_factory=dict)
 
 
@@ -69,7 +69,7 @@ class BaseConnector(abc.ABC):
         self._logger = logging.getLogger(
             f"{__name__}.{config.connector_name}"
         )
-        logging.basicConfig(level=getattr(logging, config.log_level.upper(), logging.INFO))
+        logging.basicConfig(level=getattr(logging, config.log_level.upper(), logging.WARNING))
 
     @abc.abstractmethod
     def check(self) -> bool:
@@ -102,10 +102,3 @@ class BaseConnector(abc.ABC):
         Yields:
             AirbyteRecord instances for each row of data.
         """
-
-    def __repr__(self) -> str:
-        return (
-            f"{self.__class__.__name__}("
-            f"name={self.config.connector_name!r}, "
-            f"version={self.config.connector_version!r})"
-        )
