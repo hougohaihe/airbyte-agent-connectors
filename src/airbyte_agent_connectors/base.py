@@ -64,6 +64,10 @@ class ConnectorCatalog:
                 return stream
         return None
 
+    def __len__(self) -> int:
+        """Return the number of streams in the catalog."""
+        return len(self.streams)
+
 
 class BaseConnector(abc.ABC):
     """Abstract base class for all Airbyte agent connectors.
@@ -96,12 +100,12 @@ class BaseConnector(abc.ABC):
         """
 
     @abc.abstractmethod
-    def read(
-        self,
-        catalog: ConnectorCatalog,
-        state: Optional[Dict[str, Any]] = None,
-    ) -> Iterator[AirbyteRecord]:
-        """Read records from the source and yield them one by one.
+    def read(self, catalog: ConnectorCatalog) -> Iterator[AirbyteRecord]:
+        """Read records from the source for all streams in the catalog.
 
         Args:
-            catalog: The catalog of
+            catalog: The catalog of streams to read from.
+
+        Yields:
+            AirbyteRecord instances for each record read.
+        """
