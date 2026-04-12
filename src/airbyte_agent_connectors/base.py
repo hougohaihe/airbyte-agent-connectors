@@ -68,6 +68,10 @@ class ConnectorCatalog:
         """Return the number of streams in the catalog."""
         return len(self.streams)
 
+    def __contains__(self, name: str) -> bool:
+        """Allow `'stream_name' in catalog` checks."""
+        return self.get_stream(name) is not None
+
 
 class BaseConnector(abc.ABC):
     """Abstract base class for all Airbyte agent connectors.
@@ -95,17 +99,4 @@ class BaseConnector(abc.ABC):
     def discover(self) -> ConnectorCatalog:
         """Return the catalog of streams available from this connector.
 
-        Returns:
-            A ConnectorCatalog describing all available streams.
-        """
-
-    @abc.abstractmethod
-    def read(self, catalog: ConnectorCatalog) -> Iterator[AirbyteRecord]:
-        """Read records from the source for all streams in the catalog.
-
-        Args:
-            catalog: The catalog of streams to read from.
-
-        Yields:
-            AirbyteRecord instances for each record read.
-        """
+   
