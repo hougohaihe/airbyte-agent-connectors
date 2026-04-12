@@ -100,6 +100,6 @@ For issues, questions, or contributions, please open an issue on GitHub.
 
 > These are my own notes as I work through this codebase.
 
-- The `skills/` directory is where most of the interesting AI logic lives — good starting point for understanding how connectors are wrapped with agent capabilities.
-- The `.claude-plugin/` config controls how Claude interacts with connector definitions; worth reading before making changes to connector schemas.
-- When running tests locally, `pytest -v -x` is the most useful invocation — stops on first failure so you're not scrolling through a wall of output.
+- The `skills/` directory is where most of the interesting AI logic lives — good starting point for understanding how connectors are extended
+- The `connectors/` directory mirrors the structure from the upstream repo; avoid heavy edits here to make upstream merges easier
+- Useful upstream issue tracker: https://github.com/airbytehq/airbyte-agent-connectors/issues
