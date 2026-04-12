@@ -52,7 +52,7 @@ airbyte-agent = "airbyte_agent_connectors.cli:app"
 packages = ["src/airbyte_agent_connectors"]
 
 [tool.ruff]
-line-length = 120
+line-length = 100
 target-version = "py310"
 
 [tool.ruff.lint]
@@ -68,4 +68,5 @@ ignore_missing_imports = true
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 asyncio_mode = "auto"
-addopts = "--cov=src/airbyte_agent_connectors --cov-report=term-missing"
+# Removed --cov flags so quick test runs don't require coverage overhead locally
+addopts = "-v"
