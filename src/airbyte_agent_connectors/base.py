@@ -57,6 +57,13 @@ class ConnectorCatalog:
         """Return a list of all stream names in the catalog."""
         return [s.name for s in self.streams]
 
+    def get_stream(self, name: str) -> Optional[AirbyteStream]:
+        """Look up a stream by name, returning None if not found."""
+        for stream in self.streams:
+            if stream.name == name:
+                return stream
+        return None
+
 
 class BaseConnector(abc.ABC):
     """Abstract base class for all Airbyte agent connectors.
@@ -97,8 +104,4 @@ class BaseConnector(abc.ABC):
         """Read records from the source and yield them one by one.
 
         Args:
-            catalog: The catalog of streams to read.
-            state: Optional incremental state from a previous sync.
-
-        Yields:
-    
+            catalog: The catalog of
