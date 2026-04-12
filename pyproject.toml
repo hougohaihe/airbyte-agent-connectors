@@ -69,4 +69,5 @@ ignore_missing_imports = true
 testpaths = ["tests"]
 asyncio_mode = "auto"
 # Removed --cov flags so quick test runs don't require coverage overhead locally
-addopts = "-v"
+# Added --tb=short to get more useful tracebacks without the full wall of text
+addopts = "-v --tb=short"
