@@ -18,6 +18,8 @@ try:
 except PackageNotFoundError:
     # Default version used when package is installed in development mode
     # or run directly from source without being installed.
+    # Using '0.0.0-dev' so version comparisons don't accidentally treat
+    # this as a real release (e.g. 0.0.0 could collide with a real tag).
     __version__ = "0.0.0-dev"
 
 __all__ = ["__version__"]
