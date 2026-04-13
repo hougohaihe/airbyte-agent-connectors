@@ -22,4 +22,7 @@ except PackageNotFoundError:
     # this as a real release (e.g. 0.0.0 could collide with a real tag).
     __version__ = "0.0.0-dev"
 
+# Expose version string for quick sanity checks during development:
+# >>> import airbyte_agent_connectors; print(airbyte_agent_connectors.__version__)
+
 __all__ = ["__version__"]
