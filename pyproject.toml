@@ -70,4 +70,5 @@ testpaths = ["tests"]
 asyncio_mode = "auto"
 # Removed --cov flags so quick test runs don't require coverage overhead locally
 # Added --tb=short to get more useful tracebacks without the full wall of text
-addopts = "-v --tb=short"
+# Using -x to stop on first failure — saves time when iterating locally
+addopts = "-v --tb=short -x"
