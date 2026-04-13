@@ -5,6 +5,10 @@ with Airbyte's data integration platform.
 
 Note: Personal fork for learning/experimentation purposes.
 Upstream: https://github.com/airbytehq/airbyte-agent-connectors
+
+Fork notes:
+- Using '0.0.0-dev' as fallback version for local dev installs
+- See CHANGELOG.md for upstream changes I've pulled in
 """
 
 from importlib.metadata import version, PackageNotFoundError
