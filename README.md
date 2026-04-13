@@ -100,6 +100,6 @@ For issues, questions, or contributions, please open an issue on GitHub.
 
 > These are my own notes as I work through this codebase.
 
-- The `skills/` directory is where most of the interesting AI logic lives — good starting point for understanding how connectors are extended
-- The `connectors/` directory mirrors the structure from the upstream repo; avoid heavy edits here to make upstream merges easier
-- Useful upstream issue tracker: https://github.com/airbytehq/airbyte-agent-connectors/issues
+- The `skills/` directory is where most of the interesting AI logic lives — good place to start exploring
+- The `connectors/` directory follows the standard Airbyte connector spec; each subdirectory is a self-contained connector
+- TODO: look into how the `generate-skills` workflow decides which connectors to process
