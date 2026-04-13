@@ -85,6 +85,7 @@ class BaseConnector(abc.ABC):
         self._logger = logging.getLogger(
             f"{__name__}.{config.connector_name}"
         )
+        # Using WARNING as default to keep output clean; override log_level in config if debugging
         logging.basicConfig(level=getattr(logging, config.log_level.upper(), logging.WARNING))
 
     @abc.abstractmethod
@@ -93,10 +94,4 @@ class BaseConnector(abc.ABC):
 
         Returns:
             True if the connection is healthy, False otherwise.
-        """
-
-    @abc.abstractmethod
-    def discover(self) -> ConnectorCatalog:
-        """Return the catalog of streams available from this connector.
-
-   
+     
